@@ -8,19 +8,19 @@ public class Tags {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int IdTag;
-    @Column(name = "TagName")
-    private String TagName;
+    private int idTag;
+    @Column(name = "tag_name")
+    private String tagName;
     public Tags(String tagName) {
-        TagName = tagName;
+        this.tagName = tagName;
     }
     public Tags() {
     }
     public int getIdTag() {
-        return IdTag;
+        return idTag;
     }
     public String getTagName() {
-        return TagName;
+        return tagName;
     }
 
 

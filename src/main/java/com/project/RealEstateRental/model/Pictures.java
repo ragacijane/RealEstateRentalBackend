@@ -8,19 +8,22 @@ public class Pictures {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int IdPicture;
-    @Column(name = "Path")
-    private String Path;
+    @Column(name = "picture_path")
+    private String picturePath;
+    @ManyToOne
+    @JoinColumn(name = "property_id", referencedColumnName = "id_property")
+    private Properties property;
 
     public Pictures(String path) {
-        Path = path;
+        picturePath = path;
     }
 
     public Pictures() {
 
     }
 
-    public String getPath() {
-        return Path;
+    public String getPicturePath() {
+        return picturePath;
     }
 
     public int getId() {

@@ -4,24 +4,24 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "property_tags")
 public class Property_tags {
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
 
     @ManyToOne
-    @JoinColumn(name = "IdProp", referencedColumnName = "IdProperty")
-    private Properties Property;
+    @JoinColumn(name = "property_id", referencedColumnName = "id_property")
+    private Properties property;
 
     @ManyToOne
-    @JoinColumn(name = "IdTag", referencedColumnName = "IdTag")
-    private Tags Tag;
+    @JoinColumn(name = "tag_id", referencedColumnName = "idTag")
+    private Tags tag;
 
     public Property_tags() {
     }
 
     public Property_tags(Properties property, Tags tag) {
-        Property = property;
-        Tag = tag;
+        this.property = property;
+        this.tag = tag;
     }
 
     public long getId() {
@@ -29,10 +29,10 @@ public class Property_tags {
     }
 
     public Properties getProperty() {
-        return Property;
+        return property;
     }
 
     public Tags getTag() {
-        return Tag;
+        return tag;
     }
 }

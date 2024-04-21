@@ -7,75 +7,76 @@ import jakarta.persistence.*;
 public class Properties {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long IdProperty;
+    @Column(name = "id_property")
+    private long idProperty;
     @ManyToOne
-    @JoinColumn(name = "Type", referencedColumnName = "IdType")
-    private Types Type;
+    @JoinColumn(name = "type_id", referencedColumnName = "idType")
+    private Types type;
     @ManyToOne
-    @JoinColumn(name = "Structure", referencedColumnName = "IdStructure")
-    private Structures Structure;
-    @Column(name = "Rooms")
-    private int Rooms;
-    @Column(name = "SquareFootage")
-    private int SquareFootage;
-    @Column(name = "Bathrooms")
-    private int Bathrooms;
+    @JoinColumn(name = "structure_id", referencedColumnName = "idStructure")
+    private Structures structure;
+    @Column(name = "rooms")
+    private int rooms;
+    @Column(name = "square_footage")
+    private int squareFootage;
+    @Column(name = "bathrooms")
+    private int bathrooms;
     @Column(name = "Heating")
     private String Heating;
     @ManyToOne
-    @JoinColumn(name = "Equipment", referencedColumnName = "IdEquipment")
-    private Equipments Equipment;
-    @Column(name = "Status")
-    private int Status;
-    @Column(name = "Deposit")
-    private int Deposit;
-    @Column(name = "Price")
-    private int Price;
-    @Column(name = "Title")
-    private String Title;
-    @Column(name = "Description")
-    private String Description;
+    @JoinColumn(name = "equipment_id", referencedColumnName = "idEquipment")
+    private Equipments equipment;
+    @Column(name = "status")
+    private int status;
+    @Column(name = "deposit")
+    private int deposit;
+    @Column(name = "price")
+    private int price;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "description")
+    private String description;
 
     public Properties(Types type, Structures structure, int rooms, int squareFootage, int bathrooms, String heating, Equipments equipment, int status, int deposit, int price, String title, String description) {
-        Type = type;
-        Structure = structure;
-        Rooms = rooms;
-        SquareFootage = squareFootage;
-        Bathrooms = bathrooms;
+        this.type = type;
+        this.structure = structure;
+        this.rooms = rooms;
+        this.squareFootage = squareFootage;
+        this.bathrooms = bathrooms;
         Heating = heating;
-        Equipment = equipment;
-        Status = status;
-        Deposit = deposit;
-        Price = price;
-        Title = title;
-        Description = description;
+        this.equipment = equipment;
+        this.status = status;
+        this.deposit = deposit;
+        this.price = price;
+        this.title = title;
+        this.description = description;
     }
 
     public Properties() {
     }
 
     public long getIdProperty() {
-        return IdProperty;
+        return idProperty;
     }
 
     public Types getType() {
-        return Type;
+        return type;
     }
 
     public Structures getStructure() {
-        return Structure;
+        return structure;
     }
 
     public int getRooms() {
-        return Rooms;
+        return rooms;
     }
 
     public int getSquareFootage() {
-        return SquareFootage;
+        return squareFootage;
     }
 
     public int getBathrooms() {
-        return Bathrooms;
+        return bathrooms;
     }
 
     public String getHeating() {
@@ -83,26 +84,26 @@ public class Properties {
     }
 
     public Equipments getEquipment() {
-        return Equipment;
+        return equipment;
     }
 
     public int getStatus() {
-        return Status;
+        return status;
     }
 
     public int getDeposit() {
-        return Deposit;
+        return deposit;
     }
 
     public int getPrice() {
-        return Price;
+        return price;
     }
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 }

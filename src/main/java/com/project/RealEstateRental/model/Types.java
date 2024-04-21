@@ -7,21 +7,21 @@ import jakarta.persistence.*;
 public class Types {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int IdType;
+    private int idType;
 
-    @Column(name = "TypeName")
-    private String TypeName;
+    @Column(name = "type_name")
+    private String typeName;
 
     public int getIdType() {
-        return IdType;
+        return idType;
     }
 
     public String getTypeName() {
-        return TypeName;
+        return typeName;
     }
 
     public Types(String typeName) {
-        TypeName = typeName;
+        this.typeName = typeName;
     }
 
     public Types() {

@@ -7,22 +7,22 @@ import jakarta.persistence.*;
 public class Structures {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int IdStructure;
-    @Column(name = "StructureType")
-    private String StructureType;
+    private int idStructure;
+    @Column(name = "structure_type")
+    private String structureType;
 
     public Structures() {
     }
 
     public Structures(String structureType) {
-        StructureType = structureType;
+        this.structureType = structureType;
     }
 
     public int getIdStructure() {
-        return IdStructure;
+        return idStructure;
     }
 
     public String getStructureType() {
-        return StructureType;
+        return structureType;
     }
 }
