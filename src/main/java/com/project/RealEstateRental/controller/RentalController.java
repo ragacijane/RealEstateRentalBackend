@@ -13,6 +13,8 @@ public class RentalController {
     @Autowired
     PropertiesRepository propertiesRepository;
     @Autowired
+    OwnersRepository ownersRepository;
+    @Autowired
     BoroughsRepository boroughsRepository;
     @Autowired
     EquipmentsRepository equipmentsRepository;
