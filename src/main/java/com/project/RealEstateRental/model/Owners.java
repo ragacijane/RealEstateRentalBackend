@@ -16,28 +16,22 @@ public class Owners {
     private String phone;
     @Column(name = "contract")
     private String contract;
-    @ManyToOne
-    @JoinColumn(name = "borough_id", referencedColumnName = "idBor")
-    private Boroughs borough;
+
     @Column(name = "street")
     private String street;
     @Column(name = "number")
     private long number;
-    @Column(name = "floor")
-    private float floor;
 
     @OneToOne
     @JoinColumn(name = "property_id", referencedColumnName = "id_property")
     private Properties property;
-    public Owners(String firstName, String lastName, String phone, String contract, Boroughs borough, String street, long number, float floor, Properties property) {
+    public Owners(String firstName, String lastName, String phone, String contract, String street, long number, Properties property) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.contract = contract;
-        this.borough = borough;
         this.street = street;
         this.number = number;
-        this.floor = floor;
         this.property = property;
     }
     public Owners() {
@@ -65,9 +59,6 @@ public class Owners {
         return contract;
     }
 
-    public Boroughs getBorough() {
-        return borough;
-    }
 
     public String getStreet() {
         return street;
@@ -77,7 +68,4 @@ public class Owners {
         return number;
     }
 
-    public float getFloor() {
-        return floor;
-    }
 }

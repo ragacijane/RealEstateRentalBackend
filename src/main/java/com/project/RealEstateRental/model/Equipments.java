@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Equipments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idEquipment;
+    private long idEquipment;
     @Column(name = "equipment_type")
     private String equipmentType;
 
@@ -16,7 +16,7 @@ public class Equipments {
     public Equipments(String equipmentType) {
         this.equipmentType = equipmentType;
     }
-    public int getId() {
+    public long getId() {
         return idEquipment;
     }
     public String getEquipmentType() {
