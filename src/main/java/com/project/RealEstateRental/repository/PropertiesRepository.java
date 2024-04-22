@@ -12,8 +12,7 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
     @Query("SELECT p FROM Properties p " +
             "WHERE (:type IS NULL OR p.type = :type) AND " +
             "(:structure IS NULL OR p.structure = :structure) AND " +
-            "(:minRooms IS NULL OR p.rooms >= :minRooms) AND " +
-            "(:maxRooms IS NULL OR p.rooms <= :maxRooms) AND " +
+            "(:rooms IS NULL OR p.rooms = :rooms) AND " +
             "(:squareFootage IS NULL OR p.squareFootage = :squareFootage) AND " +
             "(:bathrooms IS NULL OR p.bathrooms = :bathrooms) AND " +
             "(:heating IS NULL OR p.heating = :heating) AND " +
@@ -25,12 +24,11 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             "(:price IS NULL OR p.price = :price) AND " +
             "(:title IS NULL OR p.title = :title) AND " +
             "(:description IS NULL OR p.description = :description) AND " +
-            "(:tagIds IS NULL OR (SELECT COUNT(pt) FROM Property_tags pt WHERE pt.property = p AND pt.tag.idTag IN (:tagIds)) = :numTags)")
+            "(:tagIds IS NULL OR (SELECT COUNT(pt.id) FROM Property_tags pt WHERE pt.property = p AND pt.tag.idTag IN (:tagIds)) = :numTags)")
     List<Properties> findByFilter(
             @Param("type") Types type,
             @Param("structure") Structures structure,
-            @Param("minRooms") Integer minRooms,
-            @Param("maxRooms") Integer maxRooms,
+            @Param("rooms") Integer rooms,
             @Param("squareFootage") Integer squareFootage,
             @Param("bathrooms") Integer bathrooms,
             @Param("heating") String heating,
@@ -42,6 +40,6 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("price") Integer price,
             @Param("title") String title,
             @Param("description") String description,
-            @Param("tagIds") List<Long> tagIds,
-            @Param("numTags") Long numTags);
+            @Param("tagIds") List<Integer> tagIds,
+            @Param("numTags") Integer numTags);
 }

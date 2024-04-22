@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 public class Property_tags {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long Id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "property_id", referencedColumnName = "id_property")
@@ -25,7 +25,7 @@ public class Property_tags {
     }
 
     public long getId() {
-        return Id;
+        return id;
     }
 
     public Properties getProperty() {
