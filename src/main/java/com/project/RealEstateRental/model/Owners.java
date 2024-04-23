@@ -68,4 +68,31 @@ public class Owners {
         return number;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setContract(String contract) {
+        this.contract = contract;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setNumber(long number) {
+        this.number = number;
+    }
+
+    public void setProperty(Properties property) {
+        this.property = property;
+    }
 }

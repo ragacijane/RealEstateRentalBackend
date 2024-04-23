@@ -3,9 +3,7 @@ package com.project.RealEstateRental.controller;
 import com.project.RealEstateRental.model.*;
 import com.project.RealEstateRental.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +28,43 @@ public class RentalController {
     TagsRepository tagsRepository;
     @Autowired
     TypesRepository typesRepository;
+//int bathrooms, String heating, Equipments equipment, int status, int deposit, int price, String title, String description
+    @PostMapping("/creatingProp")
+    void create(
+            @RequestBody CreatePropRequest propertyRequest
+    ){
+        Types type=typesRepository.findById(propertyRequest.getTypeId()).orElseThrow();
+        Structures struct = structuresRepository.findById(propertyRequest.getStructureId()).orElseThrow();
+        Boroughs borough = boroughsRepository.findById(propertyRequest.getBoroughId()).orElseThrow();
+        Equipments equip = equipmentsRepository.findById(propertyRequest.getEquipmentId()).orElseThrow();
+
+        Properties property = propertiesRepository.save(new Properties(
+                    type,
+                    struct,
+                    propertyRequest.getRooms(),
+                    propertyRequest.getSquareFootage(),
+                    borough,
+                    propertyRequest.getFloor(),
+                    propertyRequest.getBathrooms(),
+                    propertyRequest.getHeating(),
+                    equip,
+                    propertyRequest.getStatus(),
+                    propertyRequest.getDeposit(),
+                    propertyRequest.getPrice(),
+                    propertyRequest.getTitle(),
+                    propertyRequest.getDescription()
+                )
+        );
+        Owners owner = ownersRepository.save(new Owners(
+                propertyRequest.getFirstName(),
+                propertyRequest.getLastName(),
+                propertyRequest.getPhone(),
+                propertyRequest.getContract(),
+                propertyRequest.getStreet(),
+                propertyRequest.getNumber(),
+                property
+        ));
+    }
     @GetMapping("/test")
     public List<Property_tags> testaa(){
         return propertyTagsRepository.findAll();

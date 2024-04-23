@@ -1,7 +1,0 @@
- [select p1_0.id_property,p1_0.bathrooms,p1_0.borough_id,p1_0.deposit,p1_0.description,
- p1_0.equipment_id,p1_0.floor,p1_0.heating,p1_0.price,p1_0.rooms,p1_0.square_footage,p1_0.status,p1_0.structure_id,
- p1_0.title,p1_0.type_id from properties p1_0 where (? is null or p1_0.type_id=?) and (? is null or p1_0.structure_id=?)
- and (? is null or p1_0.rooms=?) and (? is null or p1_0.square_footage=?) and (? is null or p1_0.bathrooms=?) and
- (? is null or p1_0.heating=?) and (? is null or p1_0.equipment_id=?) and (? is null or p1_0.borough_id=?) and (? is null or p1_0.floor=?)
- and (? is null or p1_0.status=?) and (? is null or p1_0.deposit=?) and (? is null or p1_0.price=?) and (? is null or p1_0.title=?) and (? is null or p1_0.description=?)
- and (? is null or (select count(p2_0.id) from property_tags p2_0 where p2_0.property_id=p1_0.id_property and 1=0)=?)] [Unknown column 'p2_0.id' in 'field list']3

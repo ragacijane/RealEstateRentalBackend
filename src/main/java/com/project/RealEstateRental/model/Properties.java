@@ -43,7 +43,8 @@ public class Properties {
     @Column(name = "description")
     private String description;
 
-    public Properties(Types type, Structures structure, int rooms, int squareFootage,Boroughs borough, float floor, int bathrooms, String heating, Equipments equipment, int status, int deposit, int price, String title, String description) {
+    public Properties(Types type, Structures structure, int rooms, int squareFootage,Boroughs borough,
+                      float floor, int bathrooms, String heating, Equipments equipment, int status, int deposit, int price, String title, String description) {
         this.type = type;
         this.structure = structure;
         this.rooms = rooms;
@@ -121,5 +122,61 @@ public class Properties {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setType(Types type) {
+        this.type = type;
+    }
+
+    public void setStructure(Structures structure) {
+        this.structure = structure;
+    }
+
+    public void setRooms(int rooms) {
+        this.rooms = rooms;
+    }
+
+    public void setSquareFootage(int squareFootage) {
+        this.squareFootage = squareFootage;
+    }
+
+    public void setBathrooms(int bathrooms) {
+        this.bathrooms = bathrooms;
+    }
+
+    public void setHeating(String heating) {
+        this.heating = heating;
+    }
+
+    public void setEquipment(Equipments equipment) {
+        this.equipment = equipment;
+    }
+
+    public void setBorough(Boroughs borough) {
+        this.borough = borough;
+    }
+
+    public void setFloor(float floor) {
+        this.floor = floor;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public void setDeposit(int deposit) {
+        this.deposit = deposit;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
