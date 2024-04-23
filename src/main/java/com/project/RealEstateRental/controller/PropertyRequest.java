@@ -1,6 +1,6 @@
 package com.project.RealEstateRental.controller;
 
-public class CreatePropRequest {
+public class PropertyRequest {
     private String firstName;
     private String lastName;
     private String phone;
@@ -21,6 +21,8 @@ public class CreatePropRequest {
     private int price;
     private String title;
     private String description;
+    private String tagIds;
+    public String getTagIds(){return tagIds;}
 
     public String getFirstName() {
         return firstName;

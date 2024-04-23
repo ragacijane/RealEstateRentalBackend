@@ -3,6 +3,7 @@ package com.project.RealEstateRental.controller;
 import com.project.RealEstateRental.model.*;
 import com.project.RealEstateRental.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class RentalController {
 //int bathrooms, String heating, Equipments equipment, int status, int deposit, int price, String title, String description
     @PostMapping("/creatingProp")
     void create(
-            @RequestBody CreatePropRequest propertyRequest
+            @RequestBody PropertyRequest propertyRequest
     ){
         Types type=typesRepository.findById(propertyRequest.getTypeId()).orElseThrow();
         Structures struct = structuresRepository.findById(propertyRequest.getStructureId()).orElseThrow();
@@ -64,6 +65,59 @@ public class RentalController {
                 propertyRequest.getNumber(),
                 property
         ));
+
+        List<Integer> tags=parseTagIds(propertyRequest.getTagIds());
+        for(Integer temp:tags){
+            Tags tag=tagsRepository.findById(temp).orElseThrow();
+            propertyTagsRepository.save(new Property_tags(property,tag));
+        }
+    }
+    @PostMapping("/updateProp/{id}")
+    @Transactional
+    void update(
+            @RequestBody PropertyRequest propertyRequest,
+            @PathVariable int id
+    ){
+        Properties property=propertiesRepository.findById(id).orElseThrow();
+        Types type=typesRepository.findById(propertyRequest.getTypeId()).orElseThrow();
+        Structures struct = structuresRepository.findById(propertyRequest.getStructureId()).orElseThrow();
+        Boroughs borough = boroughsRepository.findById(propertyRequest.getBoroughId()).orElseThrow();
+        Equipments equip = equipmentsRepository.findById(propertyRequest.getEquipmentId()).orElseThrow();
+
+        property.setType(type);
+        property.setStructure(struct);
+        property.setRooms(propertyRequest.getRooms());
+        property.setSquareFootage(propertyRequest.getSquareFootage());
+        property.setBorough(borough);
+        property.setFloor(propertyRequest.getFloor());
+        property.setBathrooms(propertyRequest.getBathrooms());
+        property.setHeating(propertyRequest.getHeating());
+        property.setEquipment(equip);
+        property.setStatus(propertyRequest.getStatus());
+        property.setDeposit(propertyRequest.getDeposit());
+        property.setPrice(propertyRequest.getPrice());
+        property.setTitle(propertyRequest.getTitle());
+        property.setDescription(propertyRequest.getDescription());
+
+        propertiesRepository.save(property);
+
+        Owners owner = ownersRepository.findById(property.getIdProperty()).orElseThrow();
+        owner.setFirstName(propertyRequest.getFirstName());
+        owner.setLastName(propertyRequest.getLastName());
+        owner.setPhone(propertyRequest.getPhone());
+        owner.setContract(propertyRequest.getContract());
+        owner.setStreet(propertyRequest.getStreet());
+        owner.setNumber(propertyRequest.getNumber());
+
+        ownersRepository.save(owner);
+
+        propertyTagsRepository.deleteByProperty(property);
+
+        List<Integer> tags=parseTagIds(propertyRequest.getTagIds());
+        for(Integer temp:tags){
+            Tags tag=tagsRepository.findById(temp).orElseThrow();
+            propertyTagsRepository.save(new Property_tags(property,tag));
+        }
     }
     @GetMapping("/test")
     public List<Property_tags> testaa(){

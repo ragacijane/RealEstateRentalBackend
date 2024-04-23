@@ -8,7 +8,7 @@ public class Properties {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_property")
-    private long idProperty;
+    private int idProperty;
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "idType")
     private Types type;
@@ -72,7 +72,7 @@ public class Properties {
     public Properties() {
     }
 
-    public long getIdProperty() {
+    public int getIdProperty() {
         return idProperty;
     }
 
