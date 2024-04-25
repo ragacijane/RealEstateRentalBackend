@@ -123,6 +123,12 @@ public class RentalController {
     public List<Property_tags> testaa(){
         return propertyTagsRepository.findAll();
     }
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping("/ownersandproperties")
+    public List<Owners> getAll(){
+        return ownersRepository.findAll();
+    }
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/properties")
     public List<Properties> filterProperties(
             @RequestParam(required = false) Integer typeId,
