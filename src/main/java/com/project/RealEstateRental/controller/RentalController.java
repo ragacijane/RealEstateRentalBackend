@@ -11,6 +11,8 @@ import java.util.List;
 
 @RestController
 public class RentalController {
+    private static final String originURL="http://localhost:8080";
+
     @Autowired
     PropertiesRepository propertiesRepository;
     @Autowired
@@ -119,16 +121,37 @@ public class RentalController {
             propertyTagsRepository.save(new Property_tags(property,tag));
         }
     }
-    @GetMapping("/test")
-    public List<Property_tags> testaa(){
-        return propertyTagsRepository.findAll();
+    @CrossOrigin(origins = originURL)
+    @GetMapping("/getBoroughs")
+    public List<Boroughs> getBoroughs(){
+        return boroughsRepository.findAll();
     }
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = originURL)
+    @GetMapping("/getStructures")
+    public List<Structures> getStructures(){
+        return structuresRepository.findAll();
+    }
+    @CrossOrigin(origins = originURL)
+    @GetMapping("/getTypes")
+    public List<Types> getTypes(){
+        return typesRepository.findAll();
+    }
+    @CrossOrigin(origins = originURL)
+    @GetMapping("/getEquipments")
+    public List<Equipments> getEquipments(){
+        return equipmentsRepository.findAll();
+    }
+    @CrossOrigin(origins = originURL)
+    @GetMapping("/getTags")
+    public List<Tags> getTags(){
+        return tagsRepository.findAll();
+    }
+    @CrossOrigin(origins = originURL)
     @GetMapping("/ownersandproperties")
     public List<Owners> getAll(){
         return ownersRepository.findAll();
     }
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = originURL)
     @GetMapping("/properties")
     public List<Properties> filterProperties(
             @RequestParam(required = false) Integer typeId,
@@ -158,7 +181,6 @@ public class RentalController {
                 type, structure, rooms, squareFootage, bathrooms, heating,
                 equipment, borough, floor, status, deposit, price, title, description, tagIdsList,numTags);
     }
-
     private List<Integer> parseTagIds(String tagIdsString) {
         List<Integer> tagIds = new ArrayList<>();
         if (tagIdsString != null && !tagIdsString.isEmpty()) {
