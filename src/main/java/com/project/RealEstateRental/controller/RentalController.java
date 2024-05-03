@@ -181,6 +181,15 @@ public class RentalController {
                 type, structure, rooms, squareFootage, bathrooms, heating,
                 equipment, borough, floor, status, deposit, price, title, description, tagIdsList,numTags);
     }
+
+    @CrossOrigin(origins = originURL)
+    @GetMapping("/listOfTags/{id}")
+    public List<Integer> getListOfTags(
+                @PathVariable int id
+        ){
+        Properties property = propertiesRepository.findById(id).orElseThrow();
+        return propertyTagsRepository.findByProperty(property);
+    }
     private List<Integer> parseTagIds(String tagIdsString) {
         List<Integer> tagIds = new ArrayList<>();
         if (tagIdsString != null && !tagIdsString.isEmpty()) {
