@@ -1,17 +1,31 @@
 package com.project.RealEstateRental.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.project.RealEstateRental.model.*;
 import com.project.RealEstateRental.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 public class RentalController {
-    private static final String originURL="http://localhost:8080";
+    private static final String FOLDER_PATH="C:/Users/lukat/OneDrive/Desktop/myfiles/";
 
     @Autowired
     PropertiesRepository propertiesRepository;
@@ -121,37 +135,30 @@ public class RentalController {
             propertyTagsRepository.save(new Property_tags(property,tag));
         }
     }
-    @CrossOrigin(origins = originURL)
     @GetMapping("/getBoroughs")
     public List<Boroughs> getBoroughs(){
         return boroughsRepository.findAll();
     }
-    @CrossOrigin(origins = originURL)
     @GetMapping("/getStructures")
     public List<Structures> getStructures(){
         return structuresRepository.findAll();
     }
-    @CrossOrigin(origins = originURL)
     @GetMapping("/getTypes")
     public List<Types> getTypes(){
         return typesRepository.findAll();
     }
-    @CrossOrigin(origins = originURL)
     @GetMapping("/getEquipments")
     public List<Equipments> getEquipments(){
         return equipmentsRepository.findAll();
     }
-    @CrossOrigin(origins = originURL)
     @GetMapping("/getTags")
     public List<Tags> getTags(){
         return tagsRepository.findAll();
     }
-    @CrossOrigin(origins = originURL)
     @GetMapping("/ownersandproperties")
     public List<Owners> getAll(){
         return ownersRepository.findAll();
     }
-    @CrossOrigin(origins = originURL)
     @GetMapping("/properties")
     public List<Properties> filterProperties(
             @RequestParam(required = false) Integer typeId,
@@ -182,13 +189,92 @@ public class RentalController {
                 equipment, borough, floor, status, deposit, price, title, description, tagIdsList,numTags);
     }
 
-    @CrossOrigin(origins = originURL)
     @GetMapping("/listOfTags/{id}")
     public List<Integer> getListOfTags(
                 @PathVariable int id
         ){
         Properties property = propertiesRepository.findById(id).orElseThrow();
         return propertyTagsRepository.findByProperty(property);
+    }
+
+    @PostMapping("/upload/{id}")
+    @Transactional
+    public String uploadImageToFileSystem(
+        @PathVariable int id,
+        MultipartFile[] images) throws IOException {
+        if(images==null || images.length == 0)return "No files uploaded!";
+
+        Properties property=propertiesRepository.findById(id).orElseThrow();
+
+        List<Pictures> existingPictures = picturesRepository.findByProperty(property);
+        if( existingPictures!=null ){
+            for(Pictures picture: existingPictures){
+                Files.delete(Path.of(picture.getPicturePath()));
+                picturesRepository.delete(picture);
+            }
+        }
+
+        int cnt=0;
+        for(MultipartFile image: images){
+            String picName=property.getIdProperty()+"_picture_"+cnt+".jpg";
+                    cnt++;
+            String picturePath=FOLDER_PATH+picName;
+            System.out.println(picturePath);
+            Pictures picture=picturesRepository.save(
+                    new Pictures(picName,picturePath,property));
+            image.transferTo(new File(picturePath));
+        }
+        return "Files uploaded succesfuly";
+    }
+    @GetMapping("/getimgs/{id}")
+    public ResponseEntity<List<ByteArrayResource>> getImages(@PathVariable int id) throws IOException {
+        Properties property = propertiesRepository.findById(id).orElseThrow();
+
+        List<Pictures> existingPictures = picturesRepository.findByProperty(property);
+        List<ByteArrayResource> images = new ArrayList<>();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        if (existingPictures != null && !existingPictures.isEmpty()) {
+            for (Pictures picture : existingPictures) {
+                byte[] byteArray = Files.readAllBytes(new File(picture.getPicturePath()).toPath());
+                images.add(new ByteArrayResource(byteArray));
+                break;
+            }
+        }
+
+        // Check if any images were found
+        if (images.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Return 404 if no images found
+        }
+
+        return ResponseEntity.ok()
+//                .headers(headers)
+                .body(images);
+    }
+
+
+    @GetMapping("/getImages/{id}")
+    public List<ResponseEntity<?>> downloadImageToFileSystem(
+            @PathVariable int id) throws IOException {
+        Properties property=propertiesRepository.findById(id).orElseThrow();
+        List<Pictures> existingPictures = picturesRepository.findByProperty(property);
+        List<ResponseEntity<?>> images = new ArrayList<>();
+        int cnt=0;
+        if( existingPictures!=null ){
+            for(Pictures picture: existingPictures) {
+                byte[] byteArray=Files.readAllBytes(new File(picture.getPicturePath()).toPath());
+                images.add(ResponseEntity
+                        .status(HttpStatus.OK)
+                        .contentType(MediaType.valueOf("image/jpeg"))
+                        .body(byteArray));
+                cnt++;
+                if(cnt==1)break;
+
+            }
+        }
+        return images;
     }
     private List<Integer> parseTagIds(String tagIdsString) {
         List<Integer> tagIds = new ArrayList<>();
