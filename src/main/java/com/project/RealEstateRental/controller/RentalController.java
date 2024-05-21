@@ -64,6 +64,7 @@ public class RentalController {
                     equip,
                     propertyRequest.getActive(),
                     propertyRequest.getVisible(),
+                    propertyRequest.getCategory(),
                     propertyRequest.getDeposit(),
                     propertyRequest.getPrice(),
                     propertyRequest.getTitle(),
@@ -171,6 +172,7 @@ public class RentalController {
             @RequestParam(required = false) Float floor,
             @RequestParam(required = false) Integer active,
             @RequestParam(required = false) Integer visible,
+            @RequestParam(required = false) Integer category,
             @RequestParam(required = false) Integer deposit,
             @RequestParam(required = false) Integer price,
             @RequestParam(required = false) String title,
@@ -186,7 +188,7 @@ public class RentalController {
 
         return propertiesRepository.findByFilter(
                 type, structure, rooms, squareFootage, bathrooms, heating,
-                equipment, borough, floor, active,visible, deposit, price, title, description, tagIdsList,numTags);
+                equipment, borough, floor, active, visible, category, deposit, price, title, description, tagIdsList,numTags);
     }
 
     @GetMapping("/listOfTags/{id}")

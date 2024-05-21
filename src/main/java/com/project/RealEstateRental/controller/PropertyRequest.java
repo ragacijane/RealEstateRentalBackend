@@ -20,11 +20,16 @@ public class PropertyRequest {
     private float floor;
     private int active;
     private int visible;
+    private int category;
     private int deposit;
     private int price;
     private String title;
     private String description;
     private String tagIds;
+
+    public int getCategory() {
+        return category;
+    }
 
     public int getVisible() {
         return visible;

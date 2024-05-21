@@ -23,6 +23,7 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             "(:floor IS NULL OR p.floor = :floor) AND " +
             "(:active IS NULL OR p.active = :active) AND " +
             "(:visible IS NULL OR p.visible = :visible) AND " +
+            "(:category IS NULL OR p.category = :category) AND " +
             "(:deposit IS NULL OR p.deposit = :deposit) AND " +
             "(:price IS NULL OR p.price = :price) AND " +
             "(:title IS NULL OR p.title = :title) AND " +
@@ -40,6 +41,7 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("floor") Float floor,
             @Param("active") Integer active,
             @Param("visible") Integer visible,
+            @Param("category") Integer category,
             @Param("deposit") Integer deposit,
             @Param("price") Integer price,
             @Param("title") String title,

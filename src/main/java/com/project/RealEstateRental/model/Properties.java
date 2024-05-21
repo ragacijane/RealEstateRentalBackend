@@ -36,6 +36,28 @@ public class Properties {
     private int active;
     @Column(name = "visible")
     private int visible;
+    @Column(name = "category")
+    private int category;
+
+    public Properties(Types type, Structures structure, int rooms, int squareFootage, int bathrooms, String heating, Equipments equipment, Boroughs borough, float floor, int active, int visible, int category, int deposit, int price, String title, String description) {
+        this.type = type;
+        this.structure = structure;
+        this.rooms = rooms;
+        this.squareFootage = squareFootage;
+        this.bathrooms = bathrooms;
+        this.heating = heating;
+        this.equipment = equipment;
+        this.borough = borough;
+        this.floor = floor;
+        this.active = active;
+        this.visible = visible;
+        this.category = category;
+        this.deposit = deposit;
+        this.price = price;
+        this.title = title;
+        this.description = description;
+    }
+
     @Column(name = "deposit")
     private int deposit;
     @Column(name = "price")
@@ -46,7 +68,7 @@ public class Properties {
     private String description;
 
     public Properties(Types type, Structures structure, int rooms, int squareFootage, Boroughs borough,
-                      float floor, int bathrooms, String heating, Equipments equipment, int active, int visible, int deposit, int price, String title, String description) {
+                      float floor, int bathrooms, String heating, Equipments equipment, int active, int visible,int category, int deposit, int price, String title, String description) {
         this.type = type;
         this.structure = structure;
         this.rooms = rooms;
@@ -58,6 +80,7 @@ public class Properties {
         this.floor=floor;
         this.active = active;
         this.visible = visible;
+        this.category=category;
         this.deposit = deposit;
         this.price = price;
         this.title = title;
@@ -66,6 +89,14 @@ public class Properties {
 
     public Boroughs getBorough() {
         return borough;
+    }
+
+    public int getCategory() {
+        return category;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
     }
 
     public float getFloor() {
