@@ -1,9 +1,11 @@
 package com.project.RealEstateRental.repository;
 
 import com.project.RealEstateRental.model.*;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -19,7 +21,8 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             "(:equipment IS NULL OR p.equipment = :equipment) AND " +
             "(:borough IS NULL OR p.borough = :borough) AND " +
             "(:floor IS NULL OR p.floor = :floor) AND " +
-            "(:status IS NULL OR p.status = :status) AND " +
+            "(:active IS NULL OR p.active = :active) AND " +
+            "(:visible IS NULL OR p.visible = :visible) AND " +
             "(:deposit IS NULL OR p.deposit = :deposit) AND " +
             "(:price IS NULL OR p.price = :price) AND " +
             "(:title IS NULL OR p.title = :title) AND " +
@@ -35,7 +38,8 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("equipment") Equipments equipment,
             @Param("borough") Boroughs borough,
             @Param("floor") Float floor,
-            @Param("status") Integer status,
+            @Param("active") Integer active,
+            @Param("visible") Integer visible,
             @Param("deposit") Integer deposit,
             @Param("price") Integer price,
             @Param("title") String title,

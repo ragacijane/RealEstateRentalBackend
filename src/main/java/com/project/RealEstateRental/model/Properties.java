@@ -32,8 +32,10 @@ public class Properties {
     private Boroughs borough;
     @Column(name = "floor")
     private float floor;
-    @Column(name = "status")
-    private int status;
+    @Column(name = "active")
+    private int active;
+    @Column(name = "visible")
+    private int visible;
     @Column(name = "deposit")
     private int deposit;
     @Column(name = "price")
@@ -43,8 +45,8 @@ public class Properties {
     @Column(name = "description")
     private String description;
 
-    public Properties(Types type, Structures structure, int rooms, int squareFootage,Boroughs borough,
-                      float floor, int bathrooms, String heating, Equipments equipment, int status, int deposit, int price, String title, String description) {
+    public Properties(Types type, Structures structure, int rooms, int squareFootage, Boroughs borough,
+                      float floor, int bathrooms, String heating, Equipments equipment, int active, int visible, int deposit, int price, String title, String description) {
         this.type = type;
         this.structure = structure;
         this.rooms = rooms;
@@ -54,7 +56,8 @@ public class Properties {
         this.equipment = equipment;
         this.borough=borough;
         this.floor=floor;
-        this.status = status;
+        this.active = active;
+        this.visible = visible;
         this.deposit = deposit;
         this.price = price;
         this.title = title;
@@ -104,8 +107,8 @@ public class Properties {
         return equipment;
     }
 
-    public int getStatus() {
-        return status;
+    public int getActive() {
+        return active;
     }
 
     public int getDeposit() {
@@ -120,8 +123,16 @@ public class Properties {
         return title;
     }
 
+    public int getVisible() {
+        return visible;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setVisible(int visible) {
+        this.visible = visible;
     }
 
     public void setType(Types type) {
@@ -160,8 +171,8 @@ public class Properties {
         this.floor = floor;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setActive(int status) {
+        this.active = status;
     }
 
     public void setDeposit(int deposit) {

@@ -1,12 +1,14 @@
 package com.project.RealEstateRental.controller;
 
 public class PropertyRequest {
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String email;
     private String phone;
     private String contract;
     private String street;
     private long number;
+    private String moreInfo;
+    //***************************
     private int typeId;
     private int structureId;
     private int rooms;
@@ -16,20 +18,26 @@ public class PropertyRequest {
     private int equipmentId;
     private int boroughId;
     private float floor;
-    private int status;
+    private int active;
+    private int visible;
     private int deposit;
     private int price;
     private String title;
     private String description;
     private String tagIds;
-    public String getTagIds(){return tagIds;}
 
-    public String getFirstName() {
-        return firstName;
+    public int getVisible() {
+        return visible;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getTagIds(){return tagIds;}
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getPhone() {
@@ -84,8 +92,8 @@ public class PropertyRequest {
         return floor;
     }
 
-    public int getStatus() {
-        return status;
+    public int getActive() {
+        return active;
     }
 
     public int getDeposit() {
@@ -104,4 +112,6 @@ public class PropertyRequest {
         return description;
     }
 
+    public String getMoreInfo() { return moreInfo;
+    }
 }

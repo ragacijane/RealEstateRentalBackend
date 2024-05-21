@@ -1,8 +1,5 @@
 package com.project.RealEstateRental.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.project.RealEstateRental.model.*;
 import com.project.RealEstateRental.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +62,8 @@ public class RentalController {
                     propertyRequest.getBathrooms(),
                     propertyRequest.getHeating(),
                     equip,
-                    propertyRequest.getStatus(),
+                    propertyRequest.getActive(),
+                    propertyRequest.getVisible(),
                     propertyRequest.getDeposit(),
                     propertyRequest.getPrice(),
                     propertyRequest.getTitle(),
@@ -73,12 +71,13 @@ public class RentalController {
                 )
         );
         Owners owner = ownersRepository.save(new Owners(
-                propertyRequest.getFirstName(),
-                propertyRequest.getLastName(),
+                propertyRequest.getName(),
+                propertyRequest.getEmail(),
                 propertyRequest.getPhone(),
                 propertyRequest.getContract(),
                 propertyRequest.getStreet(),
                 propertyRequest.getNumber(),
+                propertyRequest.getMoreInfo(),
                 property
         ));
 
@@ -109,7 +108,7 @@ public class RentalController {
         property.setBathrooms(propertyRequest.getBathrooms());
         property.setHeating(propertyRequest.getHeating());
         property.setEquipment(equip);
-        property.setStatus(propertyRequest.getStatus());
+        property.setActive(propertyRequest.getActive());
         property.setDeposit(propertyRequest.getDeposit());
         property.setPrice(propertyRequest.getPrice());
         property.setTitle(propertyRequest.getTitle());
@@ -118,8 +117,8 @@ public class RentalController {
         propertiesRepository.save(property);
 
         Owners owner = ownersRepository.findById(property.getIdProperty()).orElseThrow();
-        owner.setFirstName(propertyRequest.getFirstName());
-        owner.setLastName(propertyRequest.getLastName());
+        owner.setName(propertyRequest.getName());
+        owner.setEmail(propertyRequest.getEmail());
         owner.setPhone(propertyRequest.getPhone());
         owner.setContract(propertyRequest.getContract());
         owner.setStreet(propertyRequest.getStreet());
@@ -170,7 +169,8 @@ public class RentalController {
             @RequestParam(required = false) Integer equipmentId,
             @RequestParam(required = false) Integer boroughId,
             @RequestParam(required = false) Float floor,
-            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) Integer active,
+            @RequestParam(required = false) Integer visible,
             @RequestParam(required = false) Integer deposit,
             @RequestParam(required = false) Integer price,
             @RequestParam(required = false) String title,
@@ -186,7 +186,7 @@ public class RentalController {
 
         return propertiesRepository.findByFilter(
                 type, structure, rooms, squareFootage, bathrooms, heating,
-                equipment, borough, floor, status, deposit, price, title, description, tagIdsList,numTags);
+                equipment, borough, floor, active,visible, deposit, price, title, description, tagIdsList,numTags);
     }
 
     @GetMapping("/listOfTags/{id}")
@@ -196,7 +196,6 @@ public class RentalController {
         Properties property = propertiesRepository.findById(id).orElseThrow();
         return propertyTagsRepository.findByProperty(property);
     }
-
     @PostMapping("/upload/{id}")
     @Transactional
     public String uploadImageToFileSystem(
@@ -216,7 +215,7 @@ public class RentalController {
 
         int cnt=0;
         for(MultipartFile image: images){
-            String picName=property.getIdProperty()+"_picture_"+cnt+".jpg";
+            String picName=property.getIdProperty()+"_picture_"+cnt+".jpeg";
                     cnt++;
             String picturePath=FOLDER_PATH+picName;
             System.out.println(picturePath);
@@ -226,6 +225,34 @@ public class RentalController {
         }
         return "Files uploaded succesfuly";
     }
+    @GetMapping("/getImages/{id}")
+    public List<String> downloadImages(
+            @PathVariable int id
+    ){
+        Properties property=propertiesRepository.findById(id).orElseThrow();
+        List<Pictures> existingPictures = picturesRepository.findByProperty(property);
+        List<String> imageNames = new ArrayList<>();
+        if( existingPictures!=null ){
+            for(Pictures picture: existingPictures) {
+                imageNames.add(picture.getPicturePath());
+            }
+        }
+        return imageNames;
+    }
+    private List<Integer> parseTagIds(String tagIdsString) {
+        List<Integer> tagIds = new ArrayList<>();
+        if (tagIdsString != null && !tagIdsString.isEmpty()) {
+            String[] tagIdsArray = tagIdsString.split(",");
+            for (String tagId : tagIdsArray) {
+                tagIds.add(Integer.parseInt(tagId));
+            }
+        }
+        return tagIds;
+    }
+}
+
+
+/*
     @GetMapping("/getimgs/{id}")
     public ResponseEntity<List<ByteArrayResource>> getImages(@PathVariable int id) throws IOException {
         Properties property = propertiesRepository.findById(id).orElseThrow();
@@ -240,7 +267,6 @@ public class RentalController {
             for (Pictures picture : existingPictures) {
                 byte[] byteArray = Files.readAllBytes(new File(picture.getPicturePath()).toPath());
                 images.add(new ByteArrayResource(byteArray));
-                break;
             }
         }
 
@@ -254,8 +280,55 @@ public class RentalController {
                 .body(images);
     }
 
+    @GetMapping("/getonlyone/{id}")
+    public ResponseEntity<ByteArrayResource> getonlyone(
+            @PathVariable int id) throws IOException {
+        Properties property = propertiesRepository.findById(id).orElseThrow();
 
-    @GetMapping("/getImages/{id}")
+        List<Pictures> existingPictures = picturesRepository.findByProperty(property);
+        List<ByteArrayResource> images = new ArrayList<>();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        if (existingPictures != null && !existingPictures.isEmpty()) {
+            for (Pictures picture : existingPictures) {
+                byte[] byteArray = Files.readAllBytes(new File(picture.getPicturePath()).toPath());
+                images.add(new ByteArrayResource(byteArray));
+            }
+        }
+
+        // Check if any images were found
+        if (images.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Return 404 if no images found
+        }
+
+        return ResponseEntity.ok()
+//                .headers(headers)
+                .body(images.get(0));
+    }
+    @GetMapping("/getone/{id}")
+    public ResponseEntity<?> downloadI(
+            @PathVariable int id) throws IOException {
+        Properties property = propertiesRepository.findById(id).orElseThrow();
+        List<Pictures> existingPictures = picturesRepository.findByProperty(property);
+        List<ResponseEntity<?>> images = new ArrayList<>();
+        int cnt = 0;
+        if (existingPictures != null) {
+            for (Pictures picture : existingPictures) {
+                byte[] byteArray = Files.readAllBytes(new File(picture.getPicturePath()).toPath());
+                images.add(ResponseEntity
+                        .status(HttpStatus.OK)
+                        .contentType(MediaType.valueOf("image/jpeg"))
+                        .body(byteArray));
+                cnt++;
+                //if(cnt==1)break;
+
+            }
+        }
+        return images.get(2);
+    }
+    @GetMapping("/getImgs/{id}")
     public List<ResponseEntity<?>> downloadImageToFileSystem(
             @PathVariable int id) throws IOException {
         Properties property=propertiesRepository.findById(id).orElseThrow();
@@ -270,20 +343,9 @@ public class RentalController {
                         .contentType(MediaType.valueOf("image/jpeg"))
                         .body(byteArray));
                 cnt++;
-                if(cnt==1)break;
+                //if(cnt==1)break;
 
             }
         }
         return images;
-    }
-    private List<Integer> parseTagIds(String tagIdsString) {
-        List<Integer> tagIds = new ArrayList<>();
-        if (tagIdsString != null && !tagIdsString.isEmpty()) {
-            String[] tagIdsArray = tagIdsString.split(",");
-            for (String tagId : tagIdsArray) {
-                tagIds.add(Integer.parseInt(tagId));
-            }
-        }
-        return tagIds;
-    }
-}
+    }*/
