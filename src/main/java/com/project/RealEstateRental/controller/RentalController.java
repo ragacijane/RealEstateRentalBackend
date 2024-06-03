@@ -228,18 +228,18 @@ public class RentalController {
         return "Files uploaded succesfuly";
     }
     @GetMapping("/getImages/{id}")
-    public List<String> downloadImages(
+    public List<PictureRequest> downloadImages(
             @PathVariable int id
     ){
         Properties property=propertiesRepository.findById(id).orElseThrow();
         List<Pictures> existingPictures = picturesRepository.findByProperty(property);
-        List<String> imageNames = new ArrayList<>();
+        List<PictureRequest> images = new ArrayList<>();
         if( existingPictures!=null ){
             for(Pictures picture: existingPictures) {
-                imageNames.add(picture.getPicturePath());
+                images.add(new PictureRequest(picture.getPictureName(), picture.getPicturePath()));
             }
         }
-        return imageNames;
+        return images;
     }
     private List<Integer> parseTagIds(String tagIdsString) {
         List<Integer> tagIds = new ArrayList<>();
