@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.project</groupId>
-	<artifactId>RealEstateRental</artifactId>
+	<artifactId>RealEstateRentalBackend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>RealEstateRental</name>
 	<description>Real Estate Rental API</description>
