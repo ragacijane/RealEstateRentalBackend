@@ -98,6 +98,8 @@ public class PropertiesService {
         property.setHeating(propertyBody.getHeating());
         property.setEquipment(equip);
         property.setActive(propertyBody.getActive());
+        property.setVisible(propertyBody.getVisible());
+        property.setCategory(propertyBody.getCategory());
         property.setDeposit(propertyBody.getDeposit());
         property.setPrice(propertyBody.getPrice());
         property.setTitle(propertyBody.getTitle());
@@ -111,6 +113,7 @@ public class PropertiesService {
         owner.setContract(propertyBody.getContract());
         owner.setStreet(propertyBody.getStreet());
         owner.setNumber(propertyBody.getNumber());
+        owner.setMoreInfo(propertyBody.getMoreInfo());
 
         ownersRepository.save(owner);
 

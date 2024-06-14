@@ -28,17 +28,17 @@ public class PicturesController {
 
     @PostMapping("/uploadPictures/{id}")
     @Transactional
-    public ResponseEntity<String> uploadImageToFileSystem(
+    public ResponseEntity<MessageResponse> uploadImageToFileSystem(
             @PathVariable int id,
             MultipartFile[] images) throws IOException {
-        if(images==null || images.length == 0)return ResponseEntity.badRequest().body("No files to upload!");
+        if(images==null || images.length == 0)return ResponseEntity.badRequest().body(new MessageResponse("No files to upload!"));
 
         Properties property=propertiesService.getPropertyById(id);
 
         if(picturesService.uploadPicturesToProperty(images,property))
-            return ResponseEntity.ok("Images uploaded SUCCESSFULLY!");
+            return ResponseEntity.ok(new MessageResponse("Images uploaded SUCCESSFULLY!"));
 
-        return ResponseEntity.badRequest().body("Images uploading FAILED!");
+        return ResponseEntity.badRequest().body(new MessageResponse("Images uploading FAILED!"));
     }
     @GetMapping("/getPictures/{id}")
     public ResponseEntity<List<PictureBody>> downloadImages(

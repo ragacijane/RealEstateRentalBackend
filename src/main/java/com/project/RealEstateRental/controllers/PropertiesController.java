@@ -27,12 +27,12 @@ public class PropertiesController {
     }
     @PutMapping("/updateProperty/{id}")
     @Transactional
-    public ResponseEntity<String> updateProperty(
+    public ResponseEntity<MessageResponse> updateProperty(
             @RequestBody PropertyBody propertyBody,
             @PathVariable int id
     ){
         propertiesService.updateProperty(propertyBody,id);
-        return ResponseEntity.ok("Property updated SUCCESSFULLY!");
+        return ResponseEntity.ok(new MessageResponse("Property updated SUCCESSFULLY!"));
     }
     @GetMapping("/getOwnsAndProps")
     public ResponseEntity<List<Owners>> getAllOwnersAndProperties(){
