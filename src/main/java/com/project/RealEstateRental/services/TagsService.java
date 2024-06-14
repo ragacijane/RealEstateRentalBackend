@@ -1,5 +1,6 @@
 package com.project.RealEstateRental.services;
 
+import com.project.RealEstateRental.exceptions.ResourceNotFoundException;
 import com.project.RealEstateRental.models.Tags;
 import com.project.RealEstateRental.repositories.TagsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,15 @@ public class TagsService {
         this.propertyTagsService = propertyTagsService;
         this.propertiesService = propertiesService;
     }
-
     public List<Tags> getAllTags(){
         return tagsRepository.findAll();
     }
-
     public List<Integer> getPropertyTags(int id){
         return propertyTagsService.getTagsByProperty(propertiesService.getPropertyById(id));
+    }
+    public Tags getTagById(int id){
+        return tagsRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFoundException("There is no tag with id: "+id)
+        );
     }
 }

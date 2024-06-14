@@ -39,7 +39,8 @@ public class PicturesService {
             String picName=property.getIdProperty()+"_picture_"+cnt+".jpeg";
             cnt++;
             String picturePath=FOLDER_PATH+picName;
-            Pictures picture=picturesRepository.save(
+            //Pictures picture=
+            picturesRepository.save(
                     new Pictures(picName,picturePath,property));
             image.transferTo(new File(picturePath));
         }

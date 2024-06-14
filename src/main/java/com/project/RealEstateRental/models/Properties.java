@@ -19,6 +19,11 @@ public class Properties {
     private int rooms;
     @Column(name = "square_footage")
     private int squareFootage;
+    @ManyToOne
+    @JoinColumn(name = "borough_id", referencedColumnName = "idBor")
+    private Boroughs borough;
+    @Column(name = "floor")
+    private String floor;
     @Column(name = "bathrooms")
     private int bathrooms;
     @Column(name = "Heating")
@@ -26,38 +31,12 @@ public class Properties {
     @ManyToOne
     @JoinColumn(name = "equipment_id", referencedColumnName = "idEquipment")
     private Equipments equipment;
-
-    @ManyToOne
-    @JoinColumn(name = "borough_id", referencedColumnName = "idBor")
-    private Boroughs borough;
-    @Column(name = "floor")
-    private String floor;
     @Column(name = "active")
     private int active;
     @Column(name = "visible")
     private int visible;
     @Column(name = "category")
     private int category;
-
-    public Properties(Types type, Structures structure, int rooms, int squareFootage, int bathrooms, String heating, Equipments equipment, Boroughs borough, String floor, int active, int visible, int category, int deposit, int price, String title, String description) {
-        this.type = type;
-        this.structure = structure;
-        this.rooms = rooms;
-        this.squareFootage = squareFootage;
-        this.bathrooms = bathrooms;
-        this.heating = heating;
-        this.equipment = equipment;
-        this.borough = borough;
-        this.floor = floor;
-        this.active = active;
-        this.visible = visible;
-        this.category = category;
-        this.deposit = deposit;
-        this.price = price;
-        this.title = title;
-        this.description = description;
-    }
-
     @Column(name = "deposit")
     private int deposit;
     @Column(name = "price")
@@ -66,21 +45,21 @@ public class Properties {
     private String title;
     @Column(name = "description")
     private String description;
+    public Properties() {}
 
-    public Properties(Types type, Structures structure, int rooms, int squareFootage, Boroughs borough,
-                      String floor, int bathrooms, String heating, Equipments equipment, int active, int visible,int category, int deposit, int price, String title, String description) {
+    public Properties(Types type, Structures structure, int rooms, int squareFootage, Boroughs borough, String floor, int bathrooms, String heating, Equipments equipment, int active, int visible, int category, int deposit, int price, String title, String description) {
         this.type = type;
         this.structure = structure;
         this.rooms = rooms;
         this.squareFootage = squareFootage;
+        this.borough = borough;
+        this.floor = floor;
         this.bathrooms = bathrooms;
         this.heating = heating;
         this.equipment = equipment;
-        this.borough=borough;
-        this.floor=floor;
         this.active = active;
         this.visible = visible;
-        this.category=category;
+        this.category = category;
         this.deposit = deposit;
         this.price = price;
         this.title = title;
@@ -90,22 +69,15 @@ public class Properties {
     public Boroughs getBorough() {
         return borough;
     }
-
     public int getCategory() {
         return category;
     }
-
     public void setCategory(int category) {
         this.category = category;
     }
-
     public String getFloor() {
         return floor;
     }
-
-    public Properties() {
-    }
-
     public int getIdProperty() {
         return idProperty;
     }
@@ -166,6 +138,8 @@ public class Properties {
         this.visible = visible;
     }
 
+    public void setFloor(String floor) {this.floor = floor;}
+
     public void setType(Types type) {
         this.type = type;
     }
@@ -196,10 +170,6 @@ public class Properties {
 
     public void setBorough(Boroughs borough) {
         this.borough = borough;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
     }
 
     public void setActive(int status) {

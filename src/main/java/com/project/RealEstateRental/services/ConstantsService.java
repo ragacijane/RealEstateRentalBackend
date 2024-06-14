@@ -1,5 +1,6 @@
 package com.project.RealEstateRental.services;
 
+import com.project.RealEstateRental.exceptions.ResourceNotFoundException;
 import com.project.RealEstateRental.models.Boroughs;
 import com.project.RealEstateRental.models.Equipments;
 import com.project.RealEstateRental.models.Structures;
@@ -40,4 +41,27 @@ public class ConstantsService {
     public List<Equipments> getEquipments(){
         return equipmentsRepository.findAll();
     }
+
+    public Types getTypeById(int id){
+        return typesRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFoundException("There is no type with id: "+id)
+        );
+    }
+
+    public Structures getStructById(int id){
+        return structuresRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFoundException("There is no structure with id: "+id)
+        );
+    }
+    public Boroughs getBoroughById(int id){
+        return boroughsRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFoundException("There is no borough with id: "+id)
+        );
+    }
+    public Equipments getEquipById(int id){
+        return equipmentsRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFoundException("There is no equipment with id: "+id)
+        );
+    }
+
 }

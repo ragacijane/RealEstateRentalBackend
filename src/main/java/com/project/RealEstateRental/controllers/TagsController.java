@@ -9,7 +9,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/getTags")
+@RequestMapping("/tags")
 public class TagsController {
 
     private final TagsService tagsService;
@@ -19,11 +19,11 @@ public class TagsController {
         this.tagsService = tagsService;
     }
 
-    @GetMapping()
+    @GetMapping("/getTags")
     public ResponseEntity<List<Tags>> getTags(){
         return ResponseEntity.ok(tagsService.getAllTags());
     }
-    @GetMapping("/from/{id}")
+    @GetMapping("/getTags/from/{id}")
     public ResponseEntity<List<Integer>> getListOfTags(
             @PathVariable int id
     ){

@@ -22,6 +22,4 @@ public class Boroughs {
     public String getBoroughName() {
         return boroughName;
     }
-
-
 }

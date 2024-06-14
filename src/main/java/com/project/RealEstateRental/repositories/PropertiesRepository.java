@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-
-//TODO Override delete to set invisible :)
 public interface PropertiesRepository extends JpaRepository<Properties,Integer> {
     @Query("SELECT p FROM Properties p " +
             "WHERE (:type IS NULL OR p.type = :type) AND " +

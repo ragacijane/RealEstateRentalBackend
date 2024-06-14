@@ -4,7 +4,6 @@ import com.project.RealEstateRental.models.Pictures;
 import com.project.RealEstateRental.models.Properties;
 import com.project.RealEstateRental.services.PicturesService;
 import com.project.RealEstateRental.services.PropertiesService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class PicturesController {
         this.propertiesService = propertiesService;
     }
 
-    @PostMapping("/uploadImages/{id}")
+    @PostMapping("/uploadPictures/{id}")
     @Transactional
     public ResponseEntity<String> uploadImageToFileSystem(
             @PathVariable int id,
@@ -41,7 +40,7 @@ public class PicturesController {
 
         return ResponseEntity.badRequest().body("Images uploading FAILED!");
     }
-    @GetMapping("/getImages/{id}")
+    @GetMapping("/getPictures/{id}")
     public ResponseEntity<List<PictureBody>> downloadImages(
             @PathVariable int id
     ){
