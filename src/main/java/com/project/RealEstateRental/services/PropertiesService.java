@@ -36,6 +36,9 @@ public class PropertiesService {
         return ownersRepository.findAll();
     }
 
+    public List<Integer> getPropertyTags(int id){
+        return propertyTagsService.getTagsByProperty(getPropertyById(id));
+    }
     public Owners createProperty(PropertyBody propertyBody){
         Types type=constantsService.getTypeById(propertyBody.getTypeId());
         Structures struct = constantsService.getStructById(propertyBody.getStructureId());

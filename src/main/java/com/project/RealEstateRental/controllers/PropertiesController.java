@@ -44,6 +44,12 @@ public class PropertiesController {
     public ResponseEntity<List<Properties>> getAllProperties(){
         return ResponseEntity.ok(propertiesService.getAllProperties());
     }
+    @GetMapping("/getTags/{id}")
+    public ResponseEntity<List<Integer>> getListOfTags(
+            @PathVariable int id
+    ){
+        return ResponseEntity.ok(propertiesService.getPropertyTags(id));
+    }
     @GetMapping("/filteredProperties")
     public ResponseEntity<List<Properties>> filterProperties(
             @RequestParam(required = false) Integer typeId,

@@ -1,9 +1,6 @@
 package com.project.RealEstateRental.controllers;
 
-import com.project.RealEstateRental.models.Boroughs;
-import com.project.RealEstateRental.models.Equipments;
-import com.project.RealEstateRental.models.Structures;
-import com.project.RealEstateRental.models.Types;
+import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.services.ConstantsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +38,9 @@ public class ConstantsController {
     @GetMapping("/getEquipments")
     public ResponseEntity<List<Equipments>> getEquipments(){
         return ResponseEntity.ok(constantsService.getEquipments());
+    }
+    @GetMapping("/getTags")
+    public ResponseEntity<List<Tags>> getTags(){
+        return ResponseEntity.ok(constantsService.getAllTags());
     }
 }

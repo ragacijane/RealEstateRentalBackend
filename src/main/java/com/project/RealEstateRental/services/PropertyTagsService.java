@@ -13,11 +13,11 @@ import java.util.List;
 @Service
 public class PropertyTagsService {
     private final PropertyTagsRepository propertyTagsRepository;
-    private final TagsService tagsService;
+    private final ConstantsService constantsService;
     @Autowired
-    public PropertyTagsService(PropertyTagsRepository propertyTagsRepository, TagsService tagsService) {
+    public PropertyTagsService(PropertyTagsRepository propertyTagsRepository, ConstantsService constantsService) {
         this.propertyTagsRepository = propertyTagsRepository;
-        this.tagsService = tagsService;
+        this.constantsService = constantsService;
     }
 
     public List<Integer> getTagsByProperty(Properties property){
@@ -26,7 +26,7 @@ public class PropertyTagsService {
     public void addTagsToProperty(String tagIdsString,Properties property){
         List<Integer> tags=parseTagIds(tagIdsString);
         for(Integer temp:tags){
-            Tags tag=tagsService.getTagById(temp);
+            Tags tag= constantsService.getTagById(temp);
             addTagToProperty(tag,property);
         }
     }
