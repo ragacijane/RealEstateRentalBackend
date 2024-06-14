@@ -1,25 +1,14 @@
-package com.project.RealEstateRental.controller;
+package com.project.RealEstateRental.controllers;
 
-import com.project.RealEstateRental.model.*;
-import com.project.RealEstateRental.repository.*;
+import com.project.RealEstateRental.models.*;
+import com.project.RealEstateRental.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class RentalController {
     private static final String FOLDER_PATH="C:/Users/lukat/OneDrive/Desktop/myfiles/";
@@ -44,117 +33,99 @@ public class RentalController {
     TypesRepository typesRepository;
 //int bathrooms, String heating, Equipments equipment, int status, int deposit, int price, String title, String description
     @PostMapping("/creatingProp")
-    void create(
-            @RequestBody PropertyRequest propertyRequest
+    public Owners create(
+            @RequestBody PropertyBody propertyBody
     ){
-        Types type=typesRepository.findById(propertyRequest.getTypeId()).orElseThrow();
-        Structures struct = structuresRepository.findById(propertyRequest.getStructureId()).orElseThrow();
-        Boroughs borough = boroughsRepository.findById(propertyRequest.getBoroughId()).orElseThrow();
-        Equipments equip = equipmentsRepository.findById(propertyRequest.getEquipmentId()).orElseThrow();
+        Types type=typesRepository.findById(propertyBody.getTypeId()).orElseThrow();
+        Structures struct = structuresRepository.findById(propertyBody.getStructureId()).orElseThrow();
+        Boroughs borough = boroughsRepository.findById(propertyBody.getBoroughId()).orElseThrow();
+        Equipments equip = equipmentsRepository.findById(propertyBody.getEquipmentId()).orElseThrow();
 
         Properties property = propertiesRepository.save(new Properties(
                     type,
                     struct,
-                    propertyRequest.getRooms(),
-                    propertyRequest.getSquareFootage(),
+                    propertyBody.getRooms(),
+                    propertyBody.getSquareFootage(),
                     borough,
-                    propertyRequest.getFloor(),
-                    propertyRequest.getBathrooms(),
-                    propertyRequest.getHeating(),
+                    propertyBody.getFloor(),
+                    propertyBody.getBathrooms(),
+                    propertyBody.getHeating(),
                     equip,
-                    propertyRequest.getActive(),
-                    propertyRequest.getVisible(),
-                    propertyRequest.getCategory(),
-                    propertyRequest.getDeposit(),
-                    propertyRequest.getPrice(),
-                    propertyRequest.getTitle(),
-                    propertyRequest.getDescription()
+                    propertyBody.getActive(),
+                    propertyBody.getVisible(),
+                    propertyBody.getCategory(),
+                    propertyBody.getDeposit(),
+                    propertyBody.getPrice(),
+                    propertyBody.getTitle(),
+                    propertyBody.getDescription()
                 )
         );
         Owners owner = ownersRepository.save(new Owners(
-                propertyRequest.getName(),
-                propertyRequest.getEmail(),
-                propertyRequest.getPhone(),
-                propertyRequest.getContract(),
-                propertyRequest.getStreet(),
-                propertyRequest.getNumber(),
-                propertyRequest.getMoreInfo(),
+                propertyBody.getName(),
+                propertyBody.getEmail(),
+                propertyBody.getPhone(),
+                propertyBody.getContract(),
+                propertyBody.getStreet(),
+                propertyBody.getNumber(),
+                propertyBody.getMoreInfo(),
                 property
         ));
 
-        List<Integer> tags=parseTagIds(propertyRequest.getTagIds());
+        List<Integer> tags=parseTagIds(propertyBody.getTagIds());
         for(Integer temp:tags){
             Tags tag=tagsRepository.findById(temp).orElseThrow();
             propertyTagsRepository.save(new Property_tags(property,tag));
         }
+        return owner;
     }
     @PostMapping("/updateProp/{id}")
     @Transactional
     void update(
-            @RequestBody PropertyRequest propertyRequest,
+            @RequestBody PropertyBody propertyBody,
             @PathVariable int id
     ){
         Properties property=propertiesRepository.findById(id).orElseThrow();
-        Types type=typesRepository.findById(propertyRequest.getTypeId()).orElseThrow();
-        Structures struct = structuresRepository.findById(propertyRequest.getStructureId()).orElseThrow();
-        Boroughs borough = boroughsRepository.findById(propertyRequest.getBoroughId()).orElseThrow();
-        Equipments equip = equipmentsRepository.findById(propertyRequest.getEquipmentId()).orElseThrow();
+        Types type=typesRepository.findById(propertyBody.getTypeId()).orElseThrow();
+        Structures struct = structuresRepository.findById(propertyBody.getStructureId()).orElseThrow();
+        Boroughs borough = boroughsRepository.findById(propertyBody.getBoroughId()).orElseThrow();
+        Equipments equip = equipmentsRepository.findById(propertyBody.getEquipmentId()).orElseThrow();
 
         property.setType(type);
         property.setStructure(struct);
-        property.setRooms(propertyRequest.getRooms());
-        property.setSquareFootage(propertyRequest.getSquareFootage());
+        property.setRooms(propertyBody.getRooms());
+        property.setSquareFootage(propertyBody.getSquareFootage());
         property.setBorough(borough);
-        property.setFloor(propertyRequest.getFloor());
-        property.setBathrooms(propertyRequest.getBathrooms());
-        property.setHeating(propertyRequest.getHeating());
+        property.setFloor(propertyBody.getFloor());
+        property.setBathrooms(propertyBody.getBathrooms());
+        property.setHeating(propertyBody.getHeating());
         property.setEquipment(equip);
-        property.setActive(propertyRequest.getActive());
-        property.setDeposit(propertyRequest.getDeposit());
-        property.setPrice(propertyRequest.getPrice());
-        property.setTitle(propertyRequest.getTitle());
-        property.setDescription(propertyRequest.getDescription());
+        property.setActive(propertyBody.getActive());
+        property.setDeposit(propertyBody.getDeposit());
+        property.setPrice(propertyBody.getPrice());
+        property.setTitle(propertyBody.getTitle());
+        property.setDescription(propertyBody.getDescription());
 
         propertiesRepository.save(property);
 
         Owners owner = ownersRepository.findById(property.getIdProperty()).orElseThrow();
-        owner.setName(propertyRequest.getName());
-        owner.setEmail(propertyRequest.getEmail());
-        owner.setPhone(propertyRequest.getPhone());
-        owner.setContract(propertyRequest.getContract());
-        owner.setStreet(propertyRequest.getStreet());
-        owner.setNumber(propertyRequest.getNumber());
+        owner.setName(propertyBody.getName());
+        owner.setEmail(propertyBody.getEmail());
+        owner.setPhone(propertyBody.getPhone());
+        owner.setContract(propertyBody.getContract());
+        owner.setStreet(propertyBody.getStreet());
+        owner.setNumber(propertyBody.getNumber());
 
         ownersRepository.save(owner);
 
         propertyTagsRepository.deleteByProperty(property);
 
-        List<Integer> tags=parseTagIds(propertyRequest.getTagIds());
+        List<Integer> tags=parseTagIds(propertyBody.getTagIds());
         for(Integer temp:tags){
             Tags tag=tagsRepository.findById(temp).orElseThrow();
             propertyTagsRepository.save(new Property_tags(property,tag));
         }
     }
-    @GetMapping("/getBoroughs")
-    public List<Boroughs> getBoroughs(){
-        return boroughsRepository.findAll();
-    }
-    @GetMapping("/getStructures")
-    public List<Structures> getStructures(){
-        return structuresRepository.findAll();
-    }
-    @GetMapping("/getTypes")
-    public List<Types> getTypes(){
-        return typesRepository.findAll();
-    }
-    @GetMapping("/getEquipments")
-    public List<Equipments> getEquipments(){
-        return equipmentsRepository.findAll();
-    }
-    @GetMapping("/getTags")
-    public List<Tags> getTags(){
-        return tagsRepository.findAll();
-    }
+
     @GetMapping("/ownersandproperties")
     public List<Owners> getAll(){
         return ownersRepository.findAll();
@@ -169,7 +140,7 @@ public class RentalController {
             @RequestParam(required = false) String heating,
             @RequestParam(required = false) Integer equipmentId,
             @RequestParam(required = false) Integer boroughId,
-            @RequestParam(required = false) Float floor,
+            @RequestParam(required = false) String floor,
             @RequestParam(required = false) Integer active,
             @RequestParam(required = false) Integer visible,
             @RequestParam(required = false) Integer category,
@@ -191,56 +162,6 @@ public class RentalController {
                 equipment, borough, floor, active, visible, category, deposit, price, title, description, tagIdsList,numTags);
     }
 
-    @GetMapping("/listOfTags/{id}")
-    public List<Integer> getListOfTags(
-                @PathVariable int id
-        ){
-        Properties property = propertiesRepository.findById(id).orElseThrow();
-        return propertyTagsRepository.findByProperty(property);
-    }
-    @PostMapping("/upload/{id}")
-    @Transactional
-    public String uploadImageToFileSystem(
-        @PathVariable int id,
-        MultipartFile[] images) throws IOException {
-        if(images==null || images.length == 0)return "No files uploaded!";
-
-        Properties property=propertiesRepository.findById(id).orElseThrow();
-
-        List<Pictures> existingPictures = picturesRepository.findByProperty(property);
-        if( existingPictures!=null ){
-            for(Pictures picture: existingPictures){
-                Files.delete(Path.of(picture.getPicturePath()));
-                picturesRepository.delete(picture);
-            }
-        }
-
-        int cnt=0;
-        for(MultipartFile image: images){
-            String picName=property.getIdProperty()+"_picture_"+cnt+".jpeg";
-                    cnt++;
-            String picturePath=FOLDER_PATH+picName;
-            System.out.println(picturePath);
-            Pictures picture=picturesRepository.save(
-                    new Pictures(picName,picturePath,property));
-            image.transferTo(new File(picturePath));
-        }
-        return "Files uploaded succesfuly";
-    }
-    @GetMapping("/getImages/{id}")
-    public List<PictureRequest> downloadImages(
-            @PathVariable int id
-    ){
-        Properties property=propertiesRepository.findById(id).orElseThrow();
-        List<Pictures> existingPictures = picturesRepository.findByProperty(property);
-        List<PictureRequest> images = new ArrayList<>();
-        if( existingPictures!=null ){
-            for(Pictures picture: existingPictures) {
-                images.add(new PictureRequest(picture.getPictureName(), picture.getPicturePath()));
-            }
-        }
-        return images;
-    }
     private List<Integer> parseTagIds(String tagIdsString) {
         List<Integer> tagIds = new ArrayList<>();
         if (tagIdsString != null && !tagIdsString.isEmpty()) {

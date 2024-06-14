@@ -1,8 +1,7 @@
-package com.project.RealEstateRental.repository;
+package com.project.RealEstateRental.repositories;
 
-import com.project.RealEstateRental.model.Properties;
-import com.project.RealEstateRental.model.Property_tags;
-import com.project.RealEstateRental.model.Tags;
+import com.project.RealEstateRental.models.Properties;
+import com.project.RealEstateRental.models.Property_tags;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

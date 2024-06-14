@@ -1,6 +1,6 @@
-package com.project.RealEstateRental.controller;
+package com.project.RealEstateRental.controllers;
 
-public class PropertyRequest {
+public class PropertyBody {
     private String name;
     private String email;
     private String phone;
@@ -17,11 +17,11 @@ public class PropertyRequest {
     private String heating;
     private int equipmentId;
     private int boroughId;
-    private float floor;
+    private String floor;
     private int active;
     private int visible;
-    private int category;
     private int deposit;
+    private int category;
     private int price;
     private String title;
     private String description;
@@ -93,7 +93,7 @@ public class PropertyRequest {
         return boroughId;
     }
 
-    public float getFloor() {
+    public String getFloor() {
         return floor;
     }
 

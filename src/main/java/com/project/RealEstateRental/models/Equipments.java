@@ -1,4 +1,4 @@
-package com.project.RealEstateRental.model;
+package com.project.RealEstateRental.models;
 
 import jakarta.persistence.*;
 

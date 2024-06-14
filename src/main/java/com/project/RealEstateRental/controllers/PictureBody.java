@@ -1,13 +1,13 @@
-package com.project.RealEstateRental.controller;
+package com.project.RealEstateRental.controllers;
 
-public class PictureRequest {
+public class PictureBody {
     private String name;
     private String url;
 
-    public PictureRequest() {
+    public PictureBody() {
     }
 
-    public PictureRequest(String name, String url) {
+    public PictureBody(String name, String url) {
         this.name = name;
         this.url = url;
     }

@@ -1,6 +1,6 @@
-package com.project.RealEstateRental.repository;
+package com.project.RealEstateRental.repositories;
 
-import com.project.RealEstateRental.model.Tags;
+import com.project.RealEstateRental.models.Tags;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TagsRepository extends JpaRepository<Tags,Integer> {
