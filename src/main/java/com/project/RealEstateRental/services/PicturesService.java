@@ -4,6 +4,7 @@ import com.project.RealEstateRental.models.Pictures;
 import com.project.RealEstateRental.models.Properties;
 import com.project.RealEstateRental.repositories.PicturesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,12 +12,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PicturesService {
     private final PicturesRepository picturesRepository;
-
+    @Value("${image.directory.path}")
+    private String imageDirectoryPath;
     public static final String FOLDER_PATH="C:/Users/lukat/OneDrive/Desktop/myfiles/";
 
     @Autowired
@@ -49,5 +54,12 @@ public class PicturesService {
 
     public List<Pictures> getPicturesByProperty(Properties property){
         return picturesRepository.findByProperty(property);
+    }
+
+    public List<String> testGetImages(Properties property) {
+        List<Pictures> pictures = picturesRepository.findByProperty(property);
+        return pictures.stream()
+                .map(Pictures::getPictureName) // Assuming picturePath is the URL or path
+                .collect(Collectors.toList());
     }
 }

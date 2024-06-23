@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/pictures")
@@ -53,5 +55,17 @@ public class PicturesController {
             }
         }
         return ResponseEntity.ok(images);
+    }
+
+    @GetMapping("/test")
+    public List<String> test() {
+        Properties property = propertiesService.getPropertyById(1);
+        List<String> imagePaths = picturesService.testGetImages(property);
+
+        // Prepend the URL path for the images
+        String baseUrl = "http://localhost:8081/images/";
+        return imagePaths.stream()
+                .map(imagePath -> baseUrl + imagePath)
+                .collect(Collectors.toList());
     }
 }
