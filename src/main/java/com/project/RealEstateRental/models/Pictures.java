@@ -26,6 +26,14 @@ public class Pictures {
         this.property = property;
     }
 
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
+    }
+
+    public void setPicturePath(String picturePath) {
+        this.picturePath = picturePath;
+    }
+
     public String getPictureName() {
         return pictureName;
     }

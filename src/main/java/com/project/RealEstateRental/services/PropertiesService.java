@@ -120,6 +120,11 @@ public class PropertiesService {
         propertyTagsService.deleteTagFromProperty(property);
         propertyTagsService.addTagsToProperty(propertyBody.getTagIds(),property);
     }
+
+    public void updateThumbnailPhoto(Properties property,String newThumbnail){
+        property.setThumbnail(newThumbnail);
+        propertiesRepository.save(property);
+    }
     public List<Properties> getFilteredProperties(
            Integer typeId,
             Integer structureId,

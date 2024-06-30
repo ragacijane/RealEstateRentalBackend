@@ -45,6 +45,8 @@ public class Properties {
     private String title;
     @Column(name = "description")
     private String description;
+    @Column(name = "thumbnail")
+    private String thumbnail;
     public Properties() {}
 
     public Properties(Types type, Structures structure, int rooms, int squareFootage, Boroughs borough, String floor, int bathrooms, String heating, Equipments equipment, int active, int visible, int category, int deposit, int price, String title, String description) {
@@ -64,6 +66,15 @@ public class Properties {
         this.price = price;
         this.title = title;
         this.description = description;
+        this.thumbnail=null;
+    }
+
+    public String getThumbnail() {
+        return thumbnail != null ? thumbnail : "";
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public Boroughs getBorough() {

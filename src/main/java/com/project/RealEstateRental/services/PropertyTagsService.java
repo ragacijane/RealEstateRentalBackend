@@ -24,6 +24,7 @@ public class PropertyTagsService {
         return propertyTagsRepository.findByProperty(property);
     }
     public void addTagsToProperty(String tagIdsString,Properties property){
+        deleteTagFromProperty(property);
         List<Integer> tags=parseTagIds(tagIdsString);
         for(Integer temp:tags){
             Tags tag= constantsService.getTagById(temp);

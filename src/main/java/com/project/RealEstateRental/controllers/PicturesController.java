@@ -1,6 +1,5 @@
 package com.project.RealEstateRental.controllers;
 
-import com.project.RealEstateRental.models.Pictures;
 import com.project.RealEstateRental.models.Properties;
 import com.project.RealEstateRental.services.PicturesService;
 import com.project.RealEstateRental.services.PropertiesService;
@@ -9,9 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,39 +24,34 @@ public class PicturesController {
         this.propertiesService = propertiesService;
     }
 
-    @PostMapping("/uploadPictures/{id}")
+    @PostMapping("/updatePictures/{id}")
     @Transactional
-    public ResponseEntity<MessageResponse> uploadImageToFileSystem(
+    public ResponseEntity<String> updateImageToFileSystem(
             @PathVariable int id,
-            MultipartFile[] images) throws IOException {
-        if(images==null || images.length == 0)return ResponseEntity.badRequest().body(new MessageResponse("No files to upload!"));
+            MultipartFile[] newImages,
+            String thumbnailPhoto,
+            String[] deletedPhotos,
+            String isThumbInNew
+            ){
+        try {
+            Properties property=propertiesService.getPropertyById(id);
+            PicturesBody picturesBody=new PicturesBody(isThumbInNew,thumbnailPhoto,deletedPhotos,newImages);
+            String result = picturesService.updatePicturesToProperty(picturesBody,property);
+            propertiesService.updateThumbnailPhoto(property, result);
+            return ResponseEntity.ok(result);
 
-        Properties property=propertiesService.getPropertyById(id);
-
-        if(picturesService.uploadPicturesToProperty(images,property))
-            return ResponseEntity.ok(new MessageResponse("Images uploaded SUCCESSFULLY!"));
-
-        return ResponseEntity.badRequest().body(new MessageResponse("Images uploading FAILED!"));
-    }
-    @GetMapping("/getPictures/{id}")
-    public ResponseEntity<List<PictureBody>> downloadImages(
-            @PathVariable int id
-    ){
-        Properties property=propertiesService.getPropertyById(id);
-        List<Pictures> existingPictures = picturesService.getPicturesByProperty(property);
-        List<PictureBody> images = new ArrayList<>();
-        if( existingPictures!=null ){
-            for(Pictures picture: existingPictures) {
-                images.add(new PictureBody(picture.getPictureName(), picture.getPicturePath()));
-            }
+        }catch(Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body("Images uploading FAILED! "+e.getMessage());
         }
-        return ResponseEntity.ok(images);
     }
 
-    @GetMapping("/test")
-    public List<String> test() {
-        Properties property = propertiesService.getPropertyById(1);
-        List<String> imagePaths = picturesService.testGetImages(property);
+    @GetMapping("/getPictures/{id}")
+    public List<String> getPictures(
+            @PathVariable int id
+    ) {
+        Properties property = propertiesService.getPropertyById(id);
+        List<String> imagePaths = picturesService.getImages(property);
 
         // Prepend the URL path for the images
         String baseUrl = "http://localhost:8081/images/";
