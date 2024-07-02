@@ -7,9 +7,12 @@ import com.project.RealEstateRental.repositories.OwnersRepository;
 import com.project.RealEstateRental.repositories.PropertiesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
+@Transactional
 public class PropertiesService {
     private final PropertiesRepository propertiesRepository;
     private final OwnersRepository ownersRepository;
@@ -126,12 +129,12 @@ public class PropertiesService {
         propertiesRepository.save(property);
     }
     public List<Properties> getFilteredProperties(
-           Integer typeId,
+            Integer typeId,
             Integer structureId,
             Integer rooms,
-           Integer squareFootage,
-           Integer boroughId,
-           String floor,
+            Integer squareFootage,
+            Integer boroughId,
+            String floor,
             Integer bathrooms,
             String heating,
             Integer equipmentId,

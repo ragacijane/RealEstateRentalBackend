@@ -6,11 +6,13 @@ import com.project.RealEstateRental.models.Tags;
 import com.project.RealEstateRental.repositories.PropertyTagsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class PropertyTagsService {
     private final PropertyTagsRepository propertyTagsRepository;
     private final ConstantsService constantsService;
@@ -34,7 +36,8 @@ public class PropertyTagsService {
     public void deleteTagFromProperty(Properties property){
         propertyTagsRepository.deleteByProperty(property);
     }
-    private void addTagToProperty(Tags tag, Properties property){
+    @Transactional
+    protected void addTagToProperty(Tags tag, Properties property){
         propertyTagsRepository.save(new Property_tags(property,tag));
     }
     public List<Integer> parseTagIds(String tagIdsString) {

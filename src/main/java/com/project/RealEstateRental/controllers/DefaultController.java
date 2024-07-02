@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class defaultController {
+public class DefaultController {
 
-    public defaultController(){}
+    public DefaultController(){}
     @GetMapping("")
     public String def(){
         return "Its Live!";

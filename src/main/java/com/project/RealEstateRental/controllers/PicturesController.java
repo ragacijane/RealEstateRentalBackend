@@ -24,15 +24,21 @@ public class PicturesController {
         this.propertiesService = propertiesService;
     }
 
+    @GetMapping("/getThumbnail/{thumbnail}")
+    public ResponseEntity<String> getThumbnail(
+            @PathVariable String thumbnail
+    ){
+        String temp=picturesService.getThumbnail(thumbnail);
+        return ResponseEntity.ok(temp);
+    }
     @PostMapping("/updatePictures/{id}")
-    @Transactional
     public ResponseEntity<String> updateImageToFileSystem(
             @PathVariable int id,
             MultipartFile[] newImages,
             String thumbnailPhoto,
             String[] deletedPhotos,
             String isThumbInNew
-            ){
+    ){
         try {
             Properties property=propertiesService.getPropertyById(id);
             PicturesBody picturesBody=new PicturesBody(isThumbInNew,thumbnailPhoto,deletedPhotos,newImages);
@@ -51,12 +57,7 @@ public class PicturesController {
             @PathVariable int id
     ) {
         Properties property = propertiesService.getPropertyById(id);
-        List<String> imagePaths = picturesService.getImages(property);
 
-        // Prepend the URL path for the images
-        String baseUrl = "http://localhost:8081/images/";
-        return imagePaths.stream()
-                .map(imagePath -> baseUrl + imagePath)
-                .collect(Collectors.toList());
+        return picturesService.getImages(property);
     }
 }

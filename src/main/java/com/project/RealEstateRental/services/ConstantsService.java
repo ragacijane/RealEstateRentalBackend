@@ -5,11 +5,13 @@ import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class ConstantsService {
     private final BoroughsRepository boroughsRepository;
     private final EquipmentsRepository equipmentsRepository;
