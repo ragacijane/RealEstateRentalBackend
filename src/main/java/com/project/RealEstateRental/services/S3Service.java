@@ -34,15 +34,18 @@ public class S3Service {
 
     @Value("${AWS_REGION:#{null}}")
     private String region;
-//test
     @PostConstruct
     private void initializeAmazon() {
-        Dotenv dotenv = Dotenv.load();
-        accessKeyId = dotenv.get("AWS_ACCESS_KEY_ID");
-        secretKey = dotenv.get("AWS_SECRET_ACCESS_KEY");
-        bucketName = dotenv.get("S3_BUCKET_NAME");
-        region = dotenv.get("AWS_REGION");
+        if (accessKeyId == null || secretKey == null || bucketName == null || region == null) {
+            Dotenv dotenv = Dotenv.load();
+            accessKeyId = dotenv.get("AWS_ACCESS_KEY_ID");
+            secretKey = dotenv.get("AWS_SECRET_ACCESS_KEY");
+            bucketName = dotenv.get("S3_BUCKET_NAME");
+            region = dotenv.get("AWS_REGION");
+        }
 
+
+        System.out.println("Initializing Amazon S3 Client with Access Key ID: "+accessKeyId + ", Bucket Name: " + bucketName+ ", Region: "+region);
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKeyId, secretKey);
         this.s3Client = AmazonS3ClientBuilder.standard()
                 .withRegion(region)  // Adjust the region as needed
