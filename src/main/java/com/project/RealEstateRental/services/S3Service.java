@@ -34,7 +34,7 @@ public class S3Service {
 
     @Value("${AWS_REGION:#{null}}")
     private String region;
-
+//test
     @PostConstruct
     private void initializeAmazon() {
         Dotenv dotenv = Dotenv.load();
