@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,20 +23,26 @@ import java.util.Date;
 public class S3Service {
     private AmazonS3 s3Client;
 
-    @Value("${aws.accessKeyId}")
+    @Value("${AWS_ACCESS_KEY_ID:#{null}}")
     private String accessKeyId;
 
-    @Value("${aws.secretKey}")
+    @Value("${AWS_SECRET_ACCESS_KEY:#{null}}")
     private String secretKey;
 
-    @Value("${aws.s3.bucket.name}")
+    @Value("${S3_BUCKET_NAME:#{null}}")
     private String bucketName;
 
-    @Value("${aws.region}")
+    @Value("${AWS_REGION:#{null}}")
     private String region;
 
     @PostConstruct
     private void initializeAmazon() {
+        Dotenv dotenv = Dotenv.load();
+        accessKeyId = dotenv.get("AWS_ACCESS_KEY_ID");
+        secretKey = dotenv.get("AWS_SECRET_ACCESS_KEY");
+        bucketName = dotenv.get("S3_BUCKET_NAME");
+        region = dotenv.get("AWS_REGION");
+
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKeyId, secretKey);
         this.s3Client = AmazonS3ClientBuilder.standard()
                 .withRegion(region)  // Adjust the region as needed
