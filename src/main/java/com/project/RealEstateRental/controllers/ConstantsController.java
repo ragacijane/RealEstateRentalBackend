@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/constants")
 
@@ -21,25 +19,25 @@ public class ConstantsController {
     public ConstantsController(ConstantsService constantsService) {
         this.constantsService = constantsService;
     }
-    @GetMapping("/getBoroughs")
+    @GetMapping("/boroughs")
     public ResponseEntity<List<Boroughs>> getBoroughs(){
 
         return ResponseEntity.ok(constantsService.getBoroughs());
     }
-    @GetMapping("/getStructures")
+    @GetMapping("/structures")
     public ResponseEntity<List<Structures>> getStructures(){
 
         return ResponseEntity.ok(constantsService.getStructures());
     }
-    @GetMapping("/getTypes")
+    @GetMapping("/types")
     public ResponseEntity<List<Types>> getTypes(){
         return ResponseEntity.ok(constantsService.getTypes());
     }
-    @GetMapping("/getEquipments")
+    @GetMapping("/equipments")
     public ResponseEntity<List<Equipments>> getEquipments(){
         return ResponseEntity.ok(constantsService.getEquipments());
     }
-    @GetMapping("/getTags")
+    @GetMapping("/tags")
     public ResponseEntity<List<Tags>> getTags(){
         return ResponseEntity.ok(constantsService.getAllTags());
     }

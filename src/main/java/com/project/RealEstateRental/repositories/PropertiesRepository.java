@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
-@Transactional
+
 public interface PropertiesRepository extends JpaRepository<Properties,Integer> {
     @Query("SELECT p FROM Properties p " +
             "WHERE (:type IS NULL OR p.type = :type) AND " +

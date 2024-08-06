@@ -7,8 +7,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,34 +22,30 @@ import java.util.Date;
 
 @Service
 public class S3Service {
-    private AmazonS3 s3Client;
 
-    @Value("${AWS_ACCESS_KEY_ID:#{null}}")
+    private static final Logger logger = LoggerFactory.getLogger(S3Service.class);
+
+    @Value("${aws.access-key-id}")
     private String accessKeyId;
 
-    @Value("${AWS_SECRET_ACCESS_KEY:#{null}}")
+    @Value("${aws.secret-access-key}")
     private String secretKey;
 
-    @Value("${S3_BUCKET_NAME:#{null}}")
+    @Value("${s3.bucket-name}")
     private String bucketName;
 
-    @Value("${AWS_REGION:#{null}}")
+    @Value("${aws.region}")
     private String region;
+
+    private AmazonS3 s3Client;
+
     @PostConstruct
     private void initializeAmazon() {
-        if (accessKeyId == null || secretKey == null || bucketName == null || region == null) {
-            Dotenv dotenv = Dotenv.load();
-            accessKeyId = dotenv.get("AWS_ACCESS_KEY_ID");
-            secretKey = dotenv.get("AWS_SECRET_ACCESS_KEY");
-            bucketName = dotenv.get("S3_BUCKET_NAME");
-            region = dotenv.get("AWS_REGION");
-        }
+        logger.info("Initializing Amazon S3 Client with Access Key ID: {}, Bucket Name: {}, Region: {}", accessKeyId, bucketName, region);
 
-
-        System.out.println("Initializing Amazon S3 Client with Access Key ID: "+accessKeyId + ", Bucket Name: " + bucketName+ ", Region: "+region);
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKeyId, secretKey);
         this.s3Client = AmazonS3ClientBuilder.standard()
-                .withRegion(region)  // Adjust the region as needed
+                .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .build();
     }
@@ -81,9 +78,9 @@ public class S3Service {
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(convFile)) {
+            fos.write(file.getBytes());
+        }
         return convFile;
     }
 }

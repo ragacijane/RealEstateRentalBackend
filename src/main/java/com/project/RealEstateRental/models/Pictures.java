@@ -8,9 +8,7 @@ public class Pictures {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPicture;
-    @Column(name="picture_name")
     private String pictureName;
-    @Column(name = "picture_path")
     private String picturePath;
     @ManyToOne
     @JoinColumn(name = "property_id", referencedColumnName = "id_property")

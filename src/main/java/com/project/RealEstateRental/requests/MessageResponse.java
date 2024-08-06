@@ -1,4 +1,4 @@
-package com.project.RealEstateRental.controllers;
+package com.project.RealEstateRental.requests;
 
 public class MessageResponse {
     private String message;

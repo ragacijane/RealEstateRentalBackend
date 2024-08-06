@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 public class Types {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_type")
     private int idType;
 
-    @Column(name = "type_name")
     private String typeName;
 
     public int getIdType() {

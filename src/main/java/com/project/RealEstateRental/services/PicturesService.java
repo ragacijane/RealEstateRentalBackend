@@ -1,6 +1,7 @@
 package com.project.RealEstateRental.services;
 
-import com.project.RealEstateRental.controllers.PicturesBody;
+import com.project.RealEstateRental.requests.PictureResponse;
+import com.project.RealEstateRental.requests.UpdatePicturesBody;
 import com.project.RealEstateRental.models.Pictures;
 import com.project.RealEstateRental.models.Properties;
 import com.project.RealEstateRental.repositories.PicturesRepository;
@@ -10,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,10 +31,10 @@ public class PicturesService {
     public List<Pictures> getPicturesByProperty(Properties property){
         return picturesRepository.findByProperty(property);
     }
-    public List<String> getImages(Properties property) {
+    public List<PictureResponse> getImages(Properties property) {
         List<Pictures> pictures = picturesRepository.findByProperty(property);
         return pictures.stream()
-                .map(picture -> s3Service.generatePresignedUrl(picture.getPicturePath()).toString())
+                .map(picture -> new PictureResponse(s3Service.generatePresignedUrl(picture.getPicturePath()).toString(),picture.getPictureName()))
                 .collect(Collectors.toList());
     }
 
@@ -39,57 +43,59 @@ public class PicturesService {
         return s3Service.generatePresignedUrl(thumbnailPath.toString()).toString();
     }
 
-    public String updatePicturesToProperty(PicturesBody picturesBody, Properties property) throws IOException {
+    public String updatePicturesToProperty(UpdatePicturesBody updatePicturesBody, Properties property) throws IOException {
         List<Pictures> existingPictures = getPicturesByProperty(property);
-        if (picturesBody.getDeletedPhotos() != null && picturesBody.getDeletedPhotos().length > 0) {
-            deletePictures(picturesBody.getDeletedPhotos(), existingPictures);
+        if (updatePicturesBody.getDeletedPhotos() != null && updatePicturesBody.getDeletedPhotos().length > 0) {
+            deletePictures(updatePicturesBody.getDeletedPhotos(), existingPictures);
         }
 
         boolean isThumbnailSet = false;
-        if (!picturesBody.isThumbInNew()) {
+        if (!updatePicturesBody.isThumbInNew()) {
             isThumbnailSet = true;
-            handleExistingThumbnail(picturesBody, property);
+            handleExistingThumbnail(updatePicturesBody, property);
         }
 
-        if (picturesBody.getNewImages() != null && picturesBody.getNewImages().length > 0) {
-            saveNewImages(picturesBody, property, isThumbnailSet);
+        if (updatePicturesBody.getNewImages() != null && updatePicturesBody.getNewImages().length > 0) {
+            saveNewImages(updatePicturesBody, property, isThumbnailSet);
         }
 
-        return picturesBody.getThumbnailPhoto();
+        return updatePicturesBody.getThumbnailPhoto();
     }
     @Transactional
     void deletePictures(String[] deletePhotos, List<Pictures> existingPictures) throws IOException {
-        for (String picToDelete : deletePhotos) {
-            for (Pictures picture : existingPictures) {
-                if (picToDelete.equals(picture.getPictureName())) {
-                    s3Service.deleteFile(picture.getPicturePath());
-                    picturesRepository.delete(picture);
-                    break;
-                }
-            }
+        // Convert deletePhotos array to a Set for faster lookup
+        Set<String> photosToDelete = new HashSet<>(Arrays.asList(deletePhotos));
+
+        // Filter the existing pictures to find the ones to delete
+        List<Pictures> picturesToDelete = existingPictures.stream()
+                .filter(picture -> photosToDelete.contains(picture.getPictureName()))
+                .collect(Collectors.toList());
+
+        // Delete files from S3 and remove from repository
+        for (Pictures picture : picturesToDelete) {
+            s3Service.deleteFile(picture.getPicturePath());
         }
+
+        picturesRepository.deleteAll(picturesToDelete);
     }
 
-    @Transactional
     void deleteIfExistThumbnail(String thumbnail) throws IOException {
         if (thumbnail.length() > 13) {
             s3Service.deleteFile("thumbnails/" + thumbnail);
         }
     }
 
-    @Transactional
-    void handleExistingThumbnail(PicturesBody picturesBody, Properties property) throws IOException {
-        if (!picturesBody.getThumbnailPhoto().equals(property.getThumbnail())) {
+    void handleExistingThumbnail(UpdatePicturesBody updatePicturesBody, Properties property) throws IOException {
+        if (!updatePicturesBody.getThumbnailPhoto().equals(property.getThumbnail())) {
             deleteIfExistThumbnail(property.getThumbnail());
-            if (picturesBody.getThumbnailPhoto().length() > 13) {
-                copyThumbnail(picturesBody.getThumbnailPhoto(), property);
+            if (updatePicturesBody.getThumbnailPhoto().length() > 13) {
+                copyThumbnail(updatePicturesBody.getThumbnailPhoto(), property);
             } else {
-                System.out.println("Invalid picture name on copying thumbnail: " + picturesBody.getThumbnailPhoto());
+                System.out.println("Invalid picture name on copying thumbnail: " + updatePicturesBody.getThumbnailPhoto());
             }
         }
     }
 
-    @Transactional
     void copyThumbnail(String thumbnail, Properties property) {
         String sourcePath = property.getIdProperty() + "/" + thumbnail;
         String thumbnailPath = "thumbnails/" + thumbnail;
@@ -97,21 +103,21 @@ public class PicturesService {
     }
 
     @Transactional
-    boolean handleNewThumbnail(PicturesBody picturesBody, Properties property, MultipartFile image, String picName) throws IOException {
-        if (picturesBody.getThumbnailPhoto().equals(image.getOriginalFilename())) {
+    boolean handleNewThumbnail(UpdatePicturesBody updatePicturesBody, Properties property, MultipartFile image, String picName) throws IOException {
+        if (updatePicturesBody.getThumbnailPhoto().equals(image.getOriginalFilename())) {
             deleteIfExistThumbnail(property.getThumbnail());
-            picturesBody.setThumbnailPhoto(picName);
-            copyThumbnail(picturesBody.getThumbnailPhoto(), property);
+            updatePicturesBody.setThumbnailPhoto(picName);
+            copyThumbnail(updatePicturesBody.getThumbnailPhoto(), property);
             return true;
         }
         return false;
     }
 
     @Transactional
-    void saveNewImages(PicturesBody picturesBody, Properties property, boolean incomingIsThumbnailSet) throws IOException {
+    void saveNewImages(UpdatePicturesBody updatePicturesBody, Properties property, boolean incomingIsThumbnailSet) throws IOException {
         boolean isThumbnailSet = incomingIsThumbnailSet;
 
-        for (MultipartFile image : picturesBody.getNewImages()) {
+        for (MultipartFile image : updatePicturesBody.getNewImages()) {
             Pictures newPicture = picturesRepository.save(new Pictures("temp", "temp", property));
 
             String picName = property.getIdProperty() + "_picture_" + newPicture.getId() + ".jpeg";
@@ -124,7 +130,7 @@ public class PicturesService {
             s3Service.uploadFile(image, picturePath);
 
             if (!isThumbnailSet) {
-                isThumbnailSet = handleNewThumbnail(picturesBody, property, image, picName);
+                isThumbnailSet = handleNewThumbnail(updatePicturesBody, property, image, picName);
             }
         }
     }

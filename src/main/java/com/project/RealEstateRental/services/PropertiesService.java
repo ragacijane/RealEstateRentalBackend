@@ -1,6 +1,6 @@
 package com.project.RealEstateRental.services;
 
-import com.project.RealEstateRental.controllers.PropertyBody;
+import com.project.RealEstateRental.requests.UpdateItemBody;
 import com.project.RealEstateRental.exceptions.ResourceNotFoundException;
 import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.repositories.OwnersRepository;
@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class PropertiesService {
     private final PropertiesRepository propertiesRepository;
     private final OwnersRepository ownersRepository;
@@ -42,88 +41,56 @@ public class PropertiesService {
     public List<Integer> getPropertyTags(int id){
         return propertyTagsService.getTagsByProperty(getPropertyById(id));
     }
-    public Owners createProperty(PropertyBody propertyBody){
-        Types type=constantsService.getTypeById(propertyBody.getTypeId());
-        Structures struct = constantsService.getStructById(propertyBody.getStructureId());
-        Boroughs borough = constantsService.getBoroughById(propertyBody.getBoroughId());
-        Equipments equip = constantsService.getEquipById(propertyBody.getEquipmentId());
-
+    @Transactional
+    public Owners createProperty(UpdateItemBody updateItemBody){
+        Properties providedProperty=updateItemBody.getItem().getProperty();
         Properties property = propertiesRepository.save(new Properties(
-                type,
-                struct,
-                propertyBody.getRooms(),
-                propertyBody.getSquareFootage(),
-                borough,
-                propertyBody.getFloor(),
-                propertyBody.getBathrooms(),
-                propertyBody.getHeating(),
-                equip,
-                propertyBody.getActive(),
-                propertyBody.getVisible(),
-                propertyBody.getCategory(),
-                propertyBody.getDeposit(),
-                propertyBody.getPrice(),
-                propertyBody.getTitle(),
-                propertyBody.getDescription()
+                providedProperty.getType(),
+                providedProperty.getStructure(),
+                providedProperty.getRooms(),
+                providedProperty.getSquareFootage(),
+                providedProperty.getBorough(),
+                providedProperty.getFloor(),
+                providedProperty.getBathrooms(),
+                providedProperty.getHeating(),
+                providedProperty.getEquipment(),
+                providedProperty.getActive(),
+                providedProperty.getVisible(),
+                providedProperty.getCategory(),
+                providedProperty.getDeposit(),
+                providedProperty.getPrice(),
+                providedProperty.getTitle(),
+                providedProperty.getDescription()
         ));
-
+        Owners providedOwner = updateItemBody.getItem();
         Owners owner = ownersRepository.save(new Owners(
-                propertyBody.getName(),
-                propertyBody.getEmail(),
-                propertyBody.getPhone(),
-                propertyBody.getContract(),
-                propertyBody.getStreet(),
-                propertyBody.getNumber(),
-                propertyBody.getMoreInfo(),
+                providedOwner.getName(),
+                providedOwner.getEmail(),
+                providedOwner.getPhone(),
+                providedOwner.getContract(),
+                providedOwner.getStreet(),
+                providedOwner.getNumber(),
+                providedOwner.getMoreInfo(),
                 property
         ));
 
-        propertyTagsService.addTagsToProperty(propertyBody.getTagIds(),property);
+        propertyTagsService.addTagsToProperty(updateItemBody.getTagIds(),property);
         return owner;
     }
-    public void updateProperty(PropertyBody propertyBody, int id){
-        Properties property = getPropertyById(id);
-        Owners owner = ownersRepository.findById(id).orElseThrow(
-                ()->new ResourceNotFoundException("There is no owner with id: "+id)
-        );
-        Types type=constantsService.getTypeById(propertyBody.getTypeId());
-        Structures struct = constantsService.getStructById(propertyBody.getStructureId());
-        Boroughs borough = constantsService.getBoroughById(propertyBody.getBoroughId());
-        Equipments equip = constantsService.getEquipById(propertyBody.getEquipmentId());
-
-        property.setType(type);
-        property.setStructure(struct);
-        property.setRooms(propertyBody.getRooms());
-        property.setSquareFootage(propertyBody.getSquareFootage());
-        property.setBorough(borough);
-        property.setFloor(propertyBody.getFloor());
-        property.setBathrooms(propertyBody.getBathrooms());
-        property.setHeating(propertyBody.getHeating());
-        property.setEquipment(equip);
-        property.setActive(propertyBody.getActive());
-        property.setVisible(propertyBody.getVisible());
-        property.setCategory(propertyBody.getCategory());
-        property.setDeposit(propertyBody.getDeposit());
-        property.setPrice(propertyBody.getPrice());
-        property.setTitle(propertyBody.getTitle());
-        property.setDescription(propertyBody.getDescription());
+    @Transactional
+    public void updateProperty(UpdateItemBody updateItemBody){
+        Properties property = updateItemBody.getItem().getProperty();
+        Owners owner = updateItemBody.getItem();
 
         propertiesRepository.save(property);
-
-        owner.setName(propertyBody.getName());
-        owner.setEmail(propertyBody.getEmail());
-        owner.setPhone(propertyBody.getPhone());
-        owner.setContract(propertyBody.getContract());
-        owner.setStreet(propertyBody.getStreet());
-        owner.setNumber(propertyBody.getNumber());
-        owner.setMoreInfo(propertyBody.getMoreInfo());
 
         ownersRepository.save(owner);
 
         propertyTagsService.deleteTagFromProperty(property);
-        propertyTagsService.addTagsToProperty(propertyBody.getTagIds(),property);
+        propertyTagsService.addTagsToProperty(updateItemBody.getTagIds(),property);
     }
 
+    @Transactional
     public void updateThumbnailPhoto(Properties property,String newThumbnail){
         property.setThumbnail(newThumbnail);
         propertiesRepository.save(property);

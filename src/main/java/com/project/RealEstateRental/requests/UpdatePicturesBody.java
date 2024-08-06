@@ -1,17 +1,14 @@
-package com.project.RealEstateRental.controllers;
+package com.project.RealEstateRental.requests;
 
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
-public class PicturesBody {
+public class UpdatePicturesBody {
     private String isThumbInNew;
     private String thumbnailPhoto;
     private String[] deletedPhotos;
     private MultipartFile[] newImages;
 
-    public PicturesBody(String isThumbInNew,String thumbnailPhoto, String[] deletedPhotos, MultipartFile[] newImages) {
+    public UpdatePicturesBody(String isThumbInNew, String thumbnailPhoto, String[] deletedPhotos, MultipartFile[] newImages) {
         this.thumbnailPhoto = thumbnailPhoto;
         this.deletedPhotos = deletedPhotos;
         this.newImages = newImages;

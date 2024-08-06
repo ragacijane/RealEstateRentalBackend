@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 public class Boroughs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idBor;
-    @Column(name = "borough_name")
+    @Column(name = "id_borough")
+    private int idBorough;
     private String boroughName;
 
     public Boroughs() {
@@ -16,8 +16,8 @@ public class Boroughs {
     public Boroughs(String boroughName) {
         this.boroughName = boroughName;
     }
-    public long getId() {
-        return idBor;
+    public int getIdBorough() {
+        return idBorough;
     }
     public String getBoroughName() {
         return boroughName;

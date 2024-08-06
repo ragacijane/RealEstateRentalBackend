@@ -9,7 +9,6 @@ public class Tags {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idTag;
-    @Column(name = "tag_name")
     private String tagName;
     public Tags(String tagName) {
         this.tagName = tagName;

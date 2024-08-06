@@ -8,44 +8,32 @@ public class Properties {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_property")
-    private int idProperty;
+    private long idProperty;
     @ManyToOne
-    @JoinColumn(name = "type_id", referencedColumnName = "idType")
+    @JoinColumn(name = "id_type", referencedColumnName = "id_type")
     private Types type;
     @ManyToOne
-    @JoinColumn(name = "structure_id", referencedColumnName = "idStructure")
+    @JoinColumn(name = "id_structure", referencedColumnName = "id_structure")
     private Structures structure;
-    @Column(name = "rooms")
     private int rooms;
-    @Column(name = "square_footage")
     private int squareFootage;
     @ManyToOne
-    @JoinColumn(name = "borough_id", referencedColumnName = "idBor")
+    @JoinColumn(name = "id_borough", referencedColumnName = "id_borough")
     private Boroughs borough;
-    @Column(name = "floor")
     private String floor;
-    @Column(name = "bathrooms")
     private int bathrooms;
-    @Column(name = "Heating")
     private String heating;
     @ManyToOne
-    @JoinColumn(name = "equipment_id", referencedColumnName = "idEquipment")
+    @JoinColumn(name = "id_equipment", referencedColumnName = "id_equipment")
     private Equipments equipment;
-    @Column(name = "active")
     private int active;
-    @Column(name = "visible")
     private int visible;
     @Column(name = "category")
     private int category;
-    @Column(name = "deposit")
     private int deposit;
-    @Column(name = "price")
     private int price;
-    @Column(name = "title")
     private String title;
-    @Column(name = "description")
     private String description;
-    @Column(name = "thumbnail")
     private String thumbnail;
     public Properties() {}
 
@@ -89,7 +77,7 @@ public class Properties {
     public String getFloor() {
         return floor;
     }
-    public int getIdProperty() {
+    public long getIdProperty() {
         return idProperty;
     }
 

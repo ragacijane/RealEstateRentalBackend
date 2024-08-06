@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 public class Structures {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_structure")
     private int idStructure;
-    @Column(name = "structure_type")
     private String structureType;
 
     public Structures() {

@@ -1,17 +1,18 @@
 package com.project.RealEstateRental.controllers;
 
+
 import com.project.RealEstateRental.models.Properties;
+import com.project.RealEstateRental.requests.UpdatePicturesBody;
+import com.project.RealEstateRental.requests.PictureResponse;
 import com.project.RealEstateRental.services.PicturesService;
 import com.project.RealEstateRental.services.PropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
-import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:5173")
+import java.util.List;
+
 @RestController
 @RequestMapping("/pictures")
 public class PicturesController {
@@ -24,15 +25,14 @@ public class PicturesController {
         this.propertiesService = propertiesService;
     }
 
-    @GetMapping("/getThumbnail/{thumbnail}")
+    @GetMapping("/thumbnail/{thumbnail}")
     public ResponseEntity<String> getThumbnail(
             @PathVariable String thumbnail
     ){
-        String temp=picturesService.getThumbnail(thumbnail);
-        return ResponseEntity.ok(temp);
+        return ResponseEntity.ok(picturesService.getThumbnail(thumbnail));
     }
-    @PostMapping("/updatePictures/{id}")
-    public ResponseEntity<String> updateImageToFileSystem(
+    @PostMapping("/upload/{id}")
+    public ResponseEntity<String> uploadImages(
             @PathVariable int id,
             MultipartFile[] newImages,
             String thumbnailPhoto,
@@ -41,8 +41,8 @@ public class PicturesController {
     ){
         try {
             Properties property=propertiesService.getPropertyById(id);
-            PicturesBody picturesBody=new PicturesBody(isThumbInNew,thumbnailPhoto,deletedPhotos,newImages);
-            String result = picturesService.updatePicturesToProperty(picturesBody,property);
+            UpdatePicturesBody updatePicturesBody =new UpdatePicturesBody(isThumbInNew,thumbnailPhoto,deletedPhotos,newImages);
+            String result = picturesService.updatePicturesToProperty(updatePicturesBody,property);
             propertiesService.updateThumbnailPhoto(property, result);
             return ResponseEntity.ok(result);
 
@@ -52,8 +52,8 @@ public class PicturesController {
         }
     }
 
-    @GetMapping("/getPictures/{id}")
-    public List<String> getPictures(
+    @GetMapping("/{id}")
+    public List<PictureResponse> getPictures(
             @PathVariable int id
     ) {
         Properties property = propertiesService.getPropertyById(id);

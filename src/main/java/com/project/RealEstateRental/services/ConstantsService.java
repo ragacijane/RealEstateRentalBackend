@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 public class ConstantsService {
     private final BoroughsRepository boroughsRepository;
     private final EquipmentsRepository equipmentsRepository;
@@ -27,7 +26,6 @@ public class ConstantsService {
         this.structuresRepository = structuresRepository;
         this.tagsRepository = tagsRepository;
     }
-
     public List<Types> getTypes(){
         return typesRepository.findAll();
     }

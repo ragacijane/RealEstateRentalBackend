@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional
 public class PropertyTagsService {
     private final PropertyTagsRepository propertyTagsRepository;
     private final ConstantsService constantsService;
@@ -33,6 +32,7 @@ public class PropertyTagsService {
             addTagToProperty(tag,property);
         }
     }
+    @Transactional
     public void deleteTagFromProperty(Properties property){
         propertyTagsRepository.deleteByProperty(property);
     }

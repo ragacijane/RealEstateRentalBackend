@@ -3,12 +3,10 @@ import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.services.PropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/properties")
 
@@ -19,32 +17,11 @@ public class PropertiesController {
         this.propertiesService = propertiesService;
     }
 
-    @PostMapping("/createProperty")
-    public ResponseEntity<Owners> createProperty(
-            @RequestBody PropertyBody propertyBody
-    ){
-        return ResponseEntity.ok(propertiesService.createProperty(propertyBody));
-    }
-    @PutMapping("/updateProperty/{id}")
-    @Transactional
-    public ResponseEntity<MessageResponse> updateProperty(
-            @RequestBody PropertyBody propertyBody,
-            @PathVariable int id
-    ){
-        propertiesService.updateProperty(propertyBody,id);
-        return ResponseEntity.ok(new MessageResponse("Property updated SUCCESSFULLY!"));
-    }
-    @GetMapping("/getOwnsAndProps")
-    public ResponseEntity<List<Owners>> getAllOwnersAndProperties(){
-        return ResponseEntity.ok(
-                propertiesService.getAllOwnersAndProperties()
-        );
-    }
-    @GetMapping("/getProperties")
+    @GetMapping("")
     public ResponseEntity<List<Properties>> getAllProperties(){
         return ResponseEntity.ok(propertiesService.getAllProperties());
     }
-    @GetMapping("/getTags/{id}")
+    @GetMapping("/tags/{id}")
     public ResponseEntity<List<Integer>> getListOfTags(
             @PathVariable int id
     ){

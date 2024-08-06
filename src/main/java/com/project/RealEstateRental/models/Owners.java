@@ -8,19 +8,12 @@ public class Owners {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idOwner;
-    @Column(name = "name")
     private String name;
-    @Column(name = "email")
     private String email;
-    @Column(name = "phone")
     private String phone;
-    @Column(name = "contract")
     private String contract;
-    @Column(name = "street")
     private String street;
-    @Column(name = "number")
     private long number;
-    @Column(name = "more_info")
     private String moreInfo;
 
     @OneToOne
