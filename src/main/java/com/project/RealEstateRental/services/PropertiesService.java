@@ -5,6 +5,7 @@ import com.project.RealEstateRental.exceptions.ResourceNotFoundException;
 import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.repositories.OwnersRepository;
 import com.project.RealEstateRental.repositories.PropertiesRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,6 +95,22 @@ public class PropertiesService {
     public void updateThumbnailPhoto(Properties property,String newThumbnail){
         property.setThumbnail(newThumbnail);
         propertiesRepository.save(property);
+    }
+
+    @Transactional
+    public void toggleActiveField(Integer propertyId) {
+        int rowsAffected = propertiesRepository.toggleActive(propertyId);
+        if (rowsAffected == 0) {
+            throw new EntityNotFoundException("Property not found with id: " + propertyId);
+        }
+    }
+
+    @Transactional
+    public void toggleVisibleField(Integer propertyId) {
+        int rowsAffected = propertiesRepository.toggleVisible(propertyId);
+        if (rowsAffected == 0) {
+            throw new EntityNotFoundException("Property not found with id: " + propertyId);
+        }
     }
     public List<Properties> getFilteredProperties(
             Integer typeId,

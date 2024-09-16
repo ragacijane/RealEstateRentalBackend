@@ -13,13 +13,13 @@ public class Owners {
     private String phone;
     private String contract;
     private String street;
-    private long number;
+    private String number;
     private String moreInfo;
 
     @OneToOne
     @JoinColumn(name = "property_id", referencedColumnName = "id_property")
     private Properties property;
-    public Owners(String name, String email, String phone, String contract, String street, long number,String moreInfo, Properties property) {
+    public Owners(String name, String email, String phone, String contract, String street, String number,String moreInfo, Properties property) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -68,7 +68,7 @@ public class Owners {
         return street;
     }
 
-    public long getNumber() {
+    public String getNumber() {
         return number;
     }
 
@@ -92,7 +92,7 @@ public class Owners {
         this.street = street;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

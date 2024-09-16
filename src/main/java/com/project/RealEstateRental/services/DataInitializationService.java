@@ -4,6 +4,7 @@ import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.repositories.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,10 @@ public class DataInitializationService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Value("${admin.username}")
+    private String username;
+    @Value("${admin.password}")
+    private String password;
     @PostConstruct
     public void init() {
         bulkSaveService.saveAll(boroughsRepository, BOROUGHS, Boroughs::new, Boroughs::getBoroughName);
@@ -64,9 +69,8 @@ public class DataInitializationService {
         bulkSaveService.saveAll(structuresRepository, STRUCTURES, Structures::new, Structures::getStructureType);
         bulkSaveService.saveAll(tagsRepository, TAGS, Tags::new, Tags::getTagName);
         bulkSaveService.saveAll(typesRepository, TYPES, Types::new, Types::getTypeName);
-        String username = "apolone";
         if (!userRepository.existsByUsername(username)) { // Check if the user exists
-            User user = new User(username, passwordEncoder.encode("test12345"));
+            User user = new User(username, passwordEncoder.encode(password));
             userRepository.save(user);
         }
     }

@@ -15,13 +15,13 @@ public class Properties {
     @ManyToOne
     @JoinColumn(name = "id_structure", referencedColumnName = "id_structure")
     private Structures structure;
-    private int rooms;
-    private int squareFootage;
+    private String rooms;
+    private String squareFootage;
     @ManyToOne
     @JoinColumn(name = "id_borough", referencedColumnName = "id_borough")
     private Boroughs borough;
     private String floor;
-    private int bathrooms;
+    private String bathrooms;
     private String heating;
     @ManyToOne
     @JoinColumn(name = "id_equipment", referencedColumnName = "id_equipment")
@@ -31,13 +31,13 @@ public class Properties {
     @Column(name = "category")
     private int category;
     private int deposit;
-    private int price;
+    private String price;
     private String title;
     private String description;
     private String thumbnail;
     public Properties() {}
 
-    public Properties(Types type, Structures structure, int rooms, int squareFootage, Boroughs borough, String floor, int bathrooms, String heating, Equipments equipment, int active, int visible, int category, int deposit, int price, String title, String description) {
+    public Properties(Types type, Structures structure, String rooms, String squareFootage, Boroughs borough, String floor, String bathrooms, String heating, Equipments equipment, int active, int visible, int category, int deposit, String price, String title, String description) {
         this.type = type;
         this.structure = structure;
         this.rooms = rooms;
@@ -89,15 +89,15 @@ public class Properties {
         return structure;
     }
 
-    public int getRooms() {
+    public String getRooms() {
         return rooms;
     }
 
-    public int getSquareFootage() {
+    public String getSquareFootage() {
         return squareFootage;
     }
 
-    public int getBathrooms() {
+    public String getBathrooms() {
         return bathrooms;
     }
 
@@ -117,7 +117,7 @@ public class Properties {
         return deposit;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 
@@ -147,15 +147,15 @@ public class Properties {
         this.structure = structure;
     }
 
-    public void setRooms(int rooms) {
+    public void setRooms(String rooms) {
         this.rooms = rooms;
     }
 
-    public void setSquareFootage(int squareFootage) {
+    public void setSquareFootage(String squareFootage) {
         this.squareFootage = squareFootage;
     }
 
-    public void setBathrooms(int bathrooms) {
+    public void setBathrooms(String bathrooms) {
         this.bathrooms = bathrooms;
     }
 
@@ -179,7 +179,7 @@ public class Properties {
         this.deposit = deposit;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

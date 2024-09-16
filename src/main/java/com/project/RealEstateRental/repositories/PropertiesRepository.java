@@ -2,6 +2,7 @@ package com.project.RealEstateRental.repositories;
 
 import com.project.RealEstateRental.models.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -9,6 +10,17 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface PropertiesRepository extends JpaRepository<Properties,Integer> {
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Properties p SET p.active = CASE WHEN p.active = 1 THEN 0 ELSE 1 END WHERE p.id = :id")
+    int toggleActive(@Param("id") Integer id);
+
+    // Add toggle functionality for the 'visible' field (if needed)
+    @Modifying
+    @Transactional
+    @Query("UPDATE Properties p SET p.visible = CASE WHEN p.visible = 1 THEN 0 ELSE 1 END WHERE p.id = :id")
+    int toggleVisible(@Param("id") Integer id);
     @Query("SELECT p FROM Properties p " +
             "WHERE (:type IS NULL OR p.type = :type) AND " +
             "(:structure IS NULL OR p.structure = :structure) AND " +

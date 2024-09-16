@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -88,10 +91,12 @@ public class PicturesService {
     void handleExistingThumbnail(UpdatePicturesBody updatePicturesBody, Properties property) throws IOException {
         if (!updatePicturesBody.getThumbnailPhoto().equals(property.getThumbnail())) {
             deleteIfExistThumbnail(property.getThumbnail());
-            if (updatePicturesBody.getThumbnailPhoto().length() > 13) {
-                copyThumbnail(updatePicturesBody.getThumbnailPhoto(), property);
-            } else {
-                System.out.println("Invalid picture name on copying thumbnail: " + updatePicturesBody.getThumbnailPhoto());
+            if(!updatePicturesBody.getThumbnailPhoto().isEmpty()){
+                if (updatePicturesBody.getThumbnailPhoto().length() > 13) {
+                    copyThumbnail(updatePicturesBody.getThumbnailPhoto(), property);
+                } else {
+                    System.out.println("Invalid picture name on copying thumbnail: " + updatePicturesBody.getThumbnailPhoto() + " !");
+                }
             }
         }
     }
@@ -112,26 +117,41 @@ public class PicturesService {
         }
         return false;
     }
-
     @Transactional
     void saveNewImages(UpdatePicturesBody updatePicturesBody, Properties property, boolean incomingIsThumbnailSet) throws IOException {
         boolean isThumbnailSet = incomingIsThumbnailSet;
+        BufferedImage watermarkImage = ImageUtils.loadImage("src/main/resources/transparentLogo.png");
 
-        for (MultipartFile image : updatePicturesBody.getNewImages()) {
+        for (MultipartFile imageFile : updatePicturesBody.getNewImages()) {
             Pictures newPicture = picturesRepository.save(new Pictures("temp", "temp", property));
 
-            String picName = property.getIdProperty() + "_picture_" + newPicture.getId() + ".jpeg";
+            // Convert MultipartFile to BufferedImage
+            BufferedImage image = ImageIO.read(imageFile.getInputStream());
+
+            // Add watermark to image
+            BufferedImage watermarkedImage = ImageUtils.addWatermark(image, watermarkImage);
+
+            // Save watermarked image to a temporary location
+            File tempFile = new File("temp_watermarked_image.png");
+            ImageUtils.saveImage(watermarkedImage, tempFile.getAbsolutePath());
+
+            // Upload watermarked image to S3
+            String picName = property.getIdProperty() + "_picture_" + newPicture.getId() + ".png";
             String picturePath = property.getIdProperty() + "/" + picName;
+
+            s3Service.uploadFile(tempFile, picturePath);
+
+            // Clean up temporary file
+            tempFile.delete();
 
             newPicture.setPictureName(picName);
             newPicture.setPicturePath(picturePath);
             picturesRepository.save(newPicture);
 
-            s3Service.uploadFile(image, picturePath);
-
             if (!isThumbnailSet) {
-                isThumbnailSet = handleNewThumbnail(updatePicturesBody, property, image, picName);
+                isThumbnailSet = handleNewThumbnail(updatePicturesBody, property, imageFile, picName);
             }
         }
     }
+
 }

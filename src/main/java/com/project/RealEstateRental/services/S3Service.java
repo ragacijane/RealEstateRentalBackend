@@ -12,10 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
@@ -49,11 +47,9 @@ public class S3Service {
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .build();
     }
-
-    public void uploadFile(MultipartFile file, String fileName) throws IOException {
-        File convertedFile = convertMultiPartToFile(file);
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, convertedFile));
-        convertedFile.delete();
+    public void uploadFile(File file, String fileName) throws IOException {
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, file));
+        file.delete(); // Clean up the local file after upload
     }
 
     public URL getFileUrl(String fileName) {
@@ -74,13 +70,5 @@ public class S3Service {
 
     public void copyFile(String sourceFileName, String destinationFileName) {
         s3Client.copyObject(bucketName, sourceFileName, bucketName, destinationFileName);
-    }
-
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
-        try (FileOutputStream fos = new FileOutputStream(convFile)) {
-            fos.write(file.getBytes());
-        }
-        return convFile;
     }
 }
