@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Service
 public class BulkSaveService {
 
-    @Transactional
     public <T> void saveAll(JpaRepository<T, ?> repo, List<String> data, Function<String, T> entityCreator, Function<T, String> nameExtractor) {
         Set<String> existingNames = repo.findAll().stream().map(nameExtractor).collect(Collectors.toSet());
         List<T> entitiesToInsert = data.stream()

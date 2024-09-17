@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class PicturesService {
     private final PicturesRepository picturesRepository;
     private final S3Service s3Service;
@@ -45,7 +44,7 @@ public class PicturesService {
         String thumbnailPath="thumbnails/"+thumbnailName;
         return s3Service.generatePresignedUrl(thumbnailPath.toString()).toString();
     }
-
+    @Transactional
     public String updatePicturesToProperty(UpdatePicturesBody updatePicturesBody, Properties property) throws IOException {
         List<Pictures> existingPictures = getPicturesByProperty(property);
         if (updatePicturesBody.getDeletedPhotos() != null && updatePicturesBody.getDeletedPhotos().length > 0) {

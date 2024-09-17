@@ -38,7 +38,6 @@ public class PropertiesService {
     public List<Owners> getAllOwnersAndProperties(){
         return ownersRepository.findAll();
     }
-
     public List<Integer> getPropertyTags(int id){
         return propertyTagsService.getTagsByProperty(getPropertyById(id));
     }
@@ -91,13 +90,11 @@ public class PropertiesService {
         propertyTagsService.addTagsToProperty(updateItemBody.getTagIds(),property);
     }
 
-    @Transactional
     public void updateThumbnailPhoto(Properties property,String newThumbnail){
         property.setThumbnail(newThumbnail);
         propertiesRepository.save(property);
     }
 
-    @Transactional
     public void toggleActiveField(Integer propertyId) {
         int rowsAffected = propertiesRepository.toggleActive(propertyId);
         if (rowsAffected == 0) {
@@ -105,7 +102,6 @@ public class PropertiesService {
         }
     }
 
-    @Transactional
     public void toggleVisibleField(Integer propertyId) {
         int rowsAffected = propertiesRepository.toggleVisible(propertyId);
         if (rowsAffected == 0) {
