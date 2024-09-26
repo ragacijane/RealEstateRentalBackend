@@ -27,6 +27,13 @@ public class PropertiesController {
     ){
         return ResponseEntity.ok(propertiesService.getPropertyTags(id));
     }
+
+    @GetMapping("property")
+    public ResponseEntity<Properties> getSingleProperty(
+            @RequestParam(required = true) Integer id
+    ){
+        return ResponseEntity.ok(propertiesService.getPropertyById(id));
+    }
     @GetMapping("/filters")
     public ResponseEntity<List<Properties>> filterProperties(
             @RequestParam(required = false) Integer idTy,
