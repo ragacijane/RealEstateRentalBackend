@@ -27,6 +27,7 @@ public class AdminController {
         );
     }
     @PostMapping("")
+    @Transactional
     public ResponseEntity<Owners> createProperty(
             @RequestBody UpdateItemBody updateItemBody
     ){

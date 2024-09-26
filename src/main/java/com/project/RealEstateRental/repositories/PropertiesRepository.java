@@ -21,7 +21,7 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
     @Transactional
     @Query("UPDATE Properties p SET p.visible = CASE WHEN p.visible = 1 THEN 0 ELSE 1 END WHERE p.idProperty = :id")
     int toggleVisible(@Param("id") Integer id);
-    @Transactional
+
     @Query("SELECT p FROM Properties p " +
             "WHERE (:idTy IS NULL OR p.type.idType = :idTy) AND " +
             "(:idSt IS NULL OR p.structure.idStructure = :idSt) AND " +

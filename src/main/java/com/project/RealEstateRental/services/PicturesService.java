@@ -44,7 +44,7 @@ public class PicturesService {
         String thumbnailPath="thumbnails/"+thumbnailName;
         return s3Service.generatePresignedUrl(thumbnailPath.toString()).toString();
     }
-    @Transactional
+
     public String updatePicturesToProperty(UpdatePicturesBody updatePicturesBody, Properties property) throws IOException {
         List<Pictures> existingPictures = getPicturesByProperty(property);
         if (updatePicturesBody.getDeletedPhotos() != null && updatePicturesBody.getDeletedPhotos().length > 0) {
@@ -63,7 +63,7 @@ public class PicturesService {
 
         return updatePicturesBody.getThumbnailPhoto();
     }
-    @Transactional
+
     void deletePictures(String[] deletePhotos, List<Pictures> existingPictures) throws IOException {
         // Convert deletePhotos array to a Set for faster lookup
         Set<String> photosToDelete = new HashSet<>(Arrays.asList(deletePhotos));

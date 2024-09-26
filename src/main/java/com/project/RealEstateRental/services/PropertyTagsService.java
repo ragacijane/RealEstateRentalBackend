@@ -32,11 +32,11 @@ public class PropertyTagsService {
             addTagToProperty(tag,property);
         }
     }
-    @Transactional
+
     public void deleteTagFromProperty(Properties property){
         propertyTagsRepository.deleteByProperty(property);
     }
-    @Transactional
+
     protected void addTagToProperty(Tags tag, Properties property){
         propertyTagsRepository.save(new Property_tags(property,tag));
     }

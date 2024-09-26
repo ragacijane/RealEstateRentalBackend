@@ -41,7 +41,7 @@ public class PropertiesService {
     public List<Integer> getPropertyTags(int id){
         return propertyTagsService.getTagsByProperty(getPropertyById(id));
     }
-    @Transactional
+
     public Owners createProperty(UpdateItemBody updateItemBody){
         Properties providedProperty=updateItemBody.getItem().getProperty();
         Properties property = propertiesRepository.save(new Properties(
@@ -77,7 +77,7 @@ public class PropertiesService {
         propertyTagsService.addTagsToProperty(updateItemBody.getTagIds(),property);
         return owner;
     }
-    @Transactional
+
     public void updateProperty(UpdateItemBody updateItemBody){
         Properties property = updateItemBody.getItem().getProperty();
         Owners owner = updateItemBody.getItem();
