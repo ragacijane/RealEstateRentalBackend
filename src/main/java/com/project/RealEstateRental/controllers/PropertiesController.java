@@ -27,42 +27,26 @@ public class PropertiesController {
     ){
         return ResponseEntity.ok(propertiesService.getPropertyTags(id));
     }
-    @GetMapping("/filteredProperties")
+    @GetMapping("/filters")
     public ResponseEntity<List<Properties>> filterProperties(
-            @RequestParam(required = false) Integer typeId,
-            @RequestParam(required = false) Integer structureId,
-            @RequestParam(required = false) Integer rooms,
-            @RequestParam(required = false) Integer squareFootage,
-            @RequestParam(required = false) Integer bathrooms,
-            @RequestParam(required = false) String heating,
-            @RequestParam(required = false) Integer equipmentId,
-            @RequestParam(required = false) Integer boroughId,
-            @RequestParam(required = false) String floor,
-            @RequestParam(required = false) Integer active,
-            @RequestParam(required = false) Integer visible,
-            @RequestParam(required = false) Integer category,
-            @RequestParam(required = false) Integer deposit,
-            @RequestParam(required = false) Integer price,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) String tagIds) {
+            @RequestParam(required = false) Integer idTy,
+            @RequestParam(required = false) Integer idSt,
+            @RequestParam(required = false) Integer sqMin,
+            @RequestParam(required = false) Integer sqMax,
+            @RequestParam(required = false) Integer idEq,
+            @RequestParam(required = false) Integer idBor,
+            @RequestParam(required = false) Integer cat,
+            @RequestParam(required = false) Integer prMin,
+            @RequestParam(required = false) Integer prMax) {
         return ResponseEntity.ok(propertiesService.getFilteredProperties(
-                typeId,
-                 structureId,
-                 rooms,
-                 squareFootage,
-                 boroughId,
-                 floor,
-                 bathrooms,
-                 heating,
-                 equipmentId,
-                 active,
-                 visible,
-                 category,
-                 deposit,
-                 price,
-                 title,
-                 description,
-                 tagIds));
+                idTy,
+                 idSt,
+                 sqMin,
+                 sqMax,
+                 idEq,
+                 idBor,
+                 cat,
+                 prMin,
+                 prMax));
         }
 }

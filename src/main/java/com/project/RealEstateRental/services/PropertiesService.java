@@ -111,30 +111,15 @@ public class PropertiesService {
     public List<Properties> getFilteredProperties(
             Integer typeId,
             Integer structureId,
-            Integer rooms,
-            Integer squareFootage,
-            Integer boroughId,
-            String floor,
-            Integer bathrooms,
-            String heating,
+            Integer sqMin,
+            Integer sqMax,
             Integer equipmentId,
-            Integer active,
-            Integer visible,
-            Integer category,
-            Integer deposit,
-            Integer price,
-            String title,
-            String description,
-            String tagIds){
-        Types type=constantsService.getTypeById(typeId);
-        Structures structure = constantsService.getStructById(structureId);
-        Boroughs borough = constantsService.getBoroughById(boroughId);
-        Equipments equipment = constantsService.getEquipById(equipmentId);
-        List<Integer> tagIdsList = propertyTagsService.parseTagIds(tagIds);
-        Integer numTags = tagIdsList.size();
-        return propertiesRepository.findByFilter(
-                type, structure, rooms, squareFootage, bathrooms, heating,
-                equipment, borough, floor, active, visible, category, deposit, price, title, description, tagIdsList,numTags);
-
+            Integer boroughId,
+            Integer cat,
+            Integer prMin,
+            Integer prMax){
+//        List<Integer> tagIdsList = propertyTagsService.parseTagIds(tagIds);
+//        Integer numTags = tagIdsList.size();
+        return propertiesRepository.findByFilter(typeId,structureId,sqMin,sqMax,equipmentId,boroughId,cat,prMin,prMax);
     }
 }

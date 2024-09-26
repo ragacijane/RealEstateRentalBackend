@@ -13,50 +13,41 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
 
     @Modifying
     @Transactional
-    @Query("UPDATE Properties p SET p.active = CASE WHEN p.active = 1 THEN 0 ELSE 1 END WHERE p.id = :id")
+    @Query("UPDATE Properties p SET p.active = CASE WHEN p.active = 1 THEN 0 ELSE 1 END WHERE p.idProperty = :id")
     int toggleActive(@Param("id") Integer id);
 
     // Add toggle functionality for the 'visible' field (if needed)
     @Modifying
     @Transactional
-    @Query("UPDATE Properties p SET p.visible = CASE WHEN p.visible = 1 THEN 0 ELSE 1 END WHERE p.id = :id")
+    @Query("UPDATE Properties p SET p.visible = CASE WHEN p.visible = 1 THEN 0 ELSE 1 END WHERE p.idProperty = :id")
     int toggleVisible(@Param("id") Integer id);
     @Transactional
     @Query("SELECT p FROM Properties p " +
-            "WHERE (:type IS NULL OR p.type = :type) AND " +
-            "(:structure IS NULL OR p.structure = :structure) AND " +
-            "(:rooms IS NULL OR p.rooms = :rooms) AND " +
-            "(:squareFootage IS NULL OR p.squareFootage = :squareFootage) AND " +
-            "(:bathrooms IS NULL OR p.bathrooms = :bathrooms) AND " +
-            "(:heating IS NULL OR p.heating = :heating) AND " +
-            "(:equipment IS NULL OR p.equipment = :equipment) AND " +
-            "(:borough IS NULL OR p.borough = :borough) AND " +
-            "(:floor IS NULL OR p.floor = :floor) AND " +
-            "(:active IS NULL OR p.active = :active) AND " +
-            "(:visible IS NULL OR p.visible = :visible) AND " +
-            "(:category IS NULL OR p.category = :category) AND " +
-            "(:deposit IS NULL OR p.deposit = :deposit) AND " +
-            "(:price IS NULL OR p.price = :price) AND " +
-            "(:title IS NULL OR p.title = :title) AND " +
-            "(:description IS NULL OR p.description = :description) AND " +
-            "(:tagIds IS NULL OR (SELECT COUNT(pt.id) FROM Property_tags pt WHERE pt.property = p AND pt.tag.idTag IN (:tagIds)) = :numTags)")
+            "WHERE (:idTy IS NULL OR p.type.idType = :idTy) AND " +
+            "(:idSt IS NULL OR p.structure.idStructure = :idSt) AND " +
+            "(:sqMin IS NULL OR p.squareFootage >= :sqMin) AND " +
+            "(:sqMax IS NULL OR p.squareFootage <= :sqMax) AND " +
+            "(:idEq IS NULL OR p.equipment.idEquipment = :idEq) AND " +
+            "(:idBor IS NULL OR p.borough.idBorough = :idBor) AND " +
+            "(p.visible = 1) AND " +
+            "(:cat IS NULL OR p.category = :cat) AND " +
+            "(:prMin IS NULL OR p.price >= :prMin) AND " +
+            "(:prMax IS NULL OR p.price <= :prMax)")
     List<Properties> findByFilter(
-            @Param("type") Types type,
-            @Param("structure") Structures structure,
-            @Param("rooms") Integer rooms,
-            @Param("squareFootage") Integer squareFootage,
-            @Param("bathrooms") Integer bathrooms,
-            @Param("heating") String heating,
-            @Param("equipment") Equipments equipment,
-            @Param("borough") Boroughs borough,
-            @Param("floor") String floor,
-            @Param("active") Integer active,
-            @Param("visible") Integer visible,
-            @Param("category") Integer category,
-            @Param("deposit") Integer deposit,
-            @Param("price") Integer price,
-            @Param("title") String title,
-            @Param("description") String description,
+            @Param("idTy") Integer idTy,
+            @Param("idSt") Integer idSt,
+            @Param("sqMin") Integer sqMin,
+            @Param("sqMax") Integer sqMax,
+            @Param("idEq") Integer idEq,
+            @Param("idBor") Integer idBor,
+            @Param("cat") Integer cat,
+            @Param("prMin") Integer prMin,
+            @Param("prMax") Integer prMax);
+}
+
+/*
+"(:tagIds IS NULL OR (SELECT COUNT(pt.id) FROM Property_tags pt WHERE pt.property = p AND pt.tag.idTag IN (:tagIds)) = :numTags)")
+
             @Param("tagIds") List<Integer> tagIds,
             @Param("numTags") Integer numTags);
-}
+ */
