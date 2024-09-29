@@ -28,7 +28,7 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             "(:sqMin IS NULL OR p.squareFootage >= :sqMin) AND " +
             "(:sqMax IS NULL OR p.squareFootage <= :sqMax) AND " +
             "(:idEq IS NULL OR p.equipment.idEquipment = :idEq) AND " +
-            "(:idBor IS NULL OR p.borough.idBorough = :idBor) AND " +
+            "(COALESCE(:idBors, NULL) IS NULL OR p.borough.idBorough IN :idBors) AND " +
             "(p.visible = 1) AND " +
             "(:cat IS NULL OR p.category = :cat) AND " +
             "(:prMin IS NULL OR p.price >= :prMin) AND " +
@@ -39,7 +39,7 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("sqMin") Integer sqMin,
             @Param("sqMax") Integer sqMax,
             @Param("idEq") Integer idEq,
-            @Param("idBor") Integer idBor,
+            @Param("idBors") List<Integer> idBors,
             @Param("cat") Integer cat,
             @Param("prMin") Integer prMin,
             @Param("prMax") Integer prMax);

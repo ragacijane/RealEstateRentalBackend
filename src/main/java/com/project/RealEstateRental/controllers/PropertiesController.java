@@ -41,7 +41,7 @@ public class PropertiesController {
             @RequestParam(required = false) Integer sqMin,
             @RequestParam(required = false) Integer sqMax,
             @RequestParam(required = false) Integer idEq,
-            @RequestParam(required = false) Integer idBor,
+            @RequestParam(required = false) List<Integer> idBors,
             @RequestParam(required = false) Integer cat,
             @RequestParam(required = false) Integer prMin,
             @RequestParam(required = false) Integer prMax) {
@@ -51,7 +51,7 @@ public class PropertiesController {
                  sqMin,
                  sqMax,
                  idEq,
-                 idBor,
+                 idBors,
                  cat,
                  prMin,
                  prMax));

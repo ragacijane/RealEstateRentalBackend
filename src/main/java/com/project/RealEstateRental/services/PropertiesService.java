@@ -114,12 +114,12 @@ public class PropertiesService {
             Integer sqMin,
             Integer sqMax,
             Integer equipmentId,
-            Integer boroughId,
+            List<Integer> idBors,
             Integer cat,
             Integer prMin,
             Integer prMax){
 //        List<Integer> tagIdsList = propertyTagsService.parseTagIds(tagIds);
 //        Integer numTags = tagIdsList.size();
-        return propertiesRepository.findByFilter(typeId,structureId,sqMin,sqMax,equipmentId,boroughId,cat,prMin,prMax);
+        return propertiesRepository.findByFilter(typeId,structureId,sqMin,sqMax,equipmentId,idBors,cat,prMin,prMax);
     }
 }
