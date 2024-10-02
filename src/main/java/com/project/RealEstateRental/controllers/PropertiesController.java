@@ -32,7 +32,13 @@ public class PropertiesController {
     public ResponseEntity<Properties> getSingleProperty(
             @RequestParam(required = true) Integer id
     ){
-        return ResponseEntity.ok(propertiesService.getPropertyById(id));
+        Properties property = propertiesService.getPropertyById(id);
+
+        // Check if the property is null or not visible
+        if (property == null || property.getVisible() != 1) {
+            return ResponseEntity.ok(null);  // or return another appropriate response
+        }
+        return ResponseEntity.ok(property);
     }
     @GetMapping("/filters")
     public ResponseEntity<List<Properties>> filterProperties(
