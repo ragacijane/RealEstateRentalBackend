@@ -33,7 +33,7 @@ public class Properties {
     private int deposit;
     private String price;
     private String title;
-    @Column(name = "description", length = 500)
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
     private String thumbnail;
     public Properties() {}
