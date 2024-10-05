@@ -21,10 +21,9 @@ public class DataInitializationService {
     @Autowired
     private BoroughsRepository boroughsRepository;
     private static final List<String> BOROUGHS= Arrays.asList(
-            "Čukarica", "Novi Beograd", "Palilula", "Rakovica", "Savski venac",
-            "Stari grad", "Voždovac", "Vračar", "Zemun", "Zvezdara",
-            "Barajevo", "Grocka", "Lazarevac", "Mladenovac", "Obrenovac",
-            "Sopot", "Surčin");
+            "Barajevo", "Čukarica", "Grocka", "Lazarevac", "Mladenovac", "Novi Beograd",
+            "Obrenovac", "Palilula", "Rakovica", "Savski venac", "Sopot", "Stari grad",
+            "Surčin", "Voždovac", "Vračar", "Zemun", "Zvezdara", "Drugo...");
     @Autowired
     private EquipmentsRepository equipmentsRepository;
     private static final List<String> EQUIPMENTS=Arrays.asList(
