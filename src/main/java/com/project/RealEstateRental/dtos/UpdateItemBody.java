@@ -1,12 +1,13 @@
-package com.project.RealEstateRental.requests;
+package com.project.RealEstateRental.dtos;
 
-import com.project.RealEstateRental.models.Owners;
+
+import com.project.RealEstateRental.models.Properties;
 
 public class UpdateItemBody {
-    private Owners item;
+    private Properties item;
     private String tagIds;
 
-    public void setItem(Owners item) {
+    public void setItem(Properties item) {
         this.item = item;
     }
 
@@ -14,7 +15,7 @@ public class UpdateItemBody {
         this.tagIds = tagIds;
     }
 
-    public Owners getItem() {
+    public Properties getItem() {
         return item;
     }
 

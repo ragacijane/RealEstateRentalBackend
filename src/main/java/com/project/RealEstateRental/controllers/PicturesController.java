@@ -2,8 +2,8 @@ package com.project.RealEstateRental.controllers;
 
 
 import com.project.RealEstateRental.models.Properties;
-import com.project.RealEstateRental.requests.UpdatePicturesBody;
-import com.project.RealEstateRental.requests.PictureResponse;
+import com.project.RealEstateRental.dtos.UpdatePicturesBody;
+import com.project.RealEstateRental.dtos.PictureResponse;
 import com.project.RealEstateRental.services.PicturesService;
 import com.project.RealEstateRental.services.PropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;

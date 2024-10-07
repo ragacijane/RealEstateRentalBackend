@@ -5,16 +5,19 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="boroughs")
 public class Boroughs {
+    private static int nextId = 1;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_borough")
     private int idBorough;
     private String boroughName;
 
-    public Boroughs() {
-    }
     public Boroughs(String boroughName) {
+        this.idBorough = nextId++;
         this.boroughName = boroughName;
+    }
+
+    protected Boroughs() {
     }
     public int getIdBorough() {
         return idBorough;

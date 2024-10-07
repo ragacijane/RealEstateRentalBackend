@@ -1,8 +1,7 @@
 package com.project.RealEstateRental.controllers;
 
-import com.project.RealEstateRental.models.Owners;
-import com.project.RealEstateRental.requests.MessageResponse;
-import com.project.RealEstateRental.requests.UpdateItemBody;
+import com.project.RealEstateRental.dtos.UpdateItemBody;
+import com.project.RealEstateRental.models.Properties;
 import com.project.RealEstateRental.services.PropertiesService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,25 +20,24 @@ public class AdminController {
         this.propertiesService = propertiesService;
     }
     @GetMapping("")
-    public ResponseEntity<List<Owners>> getAllOwnersAndProperties(){
+    public ResponseEntity<List<Properties>> getAllOwnersAndProperties(){
         return ResponseEntity.ok(
-                propertiesService.getAllOwnersAndProperties()
+                propertiesService.getAllProperties()
         );
     }
     @PostMapping("")
     @Transactional
-    public ResponseEntity<Owners> createProperty(
+    public ResponseEntity<Long> createProperty(
             @RequestBody UpdateItemBody updateItemBody
     ){
         return ResponseEntity.ok(propertiesService.createProperty(updateItemBody));
     }
     @PutMapping("")
     @Transactional
-    public ResponseEntity<MessageResponse> updateProperty(
+    public ResponseEntity<Boolean> updateProperty(
             @RequestBody UpdateItemBody updateItemBody
     ){
-        propertiesService.updateProperty(updateItemBody);
-        return ResponseEntity.ok(new MessageResponse("Property updated SUCCESSFULLY!"));
+        return ResponseEntity.ok(propertiesService.updateProperty(updateItemBody));
     }
     @PostMapping("/{id}/toggle-active")
     public ResponseEntity<String> toggleActive(@PathVariable Integer id) {

@@ -5,10 +5,19 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "properties")
 public class Properties {
+
+    private static long nextId = 100;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_property")
     private long idProperty;
+
+    private String name;
+    private String email;
+    private String phone;
+    private String contract;
+    private String street;
+    private String number;
+    private String moreInfo;
     @ManyToOne
     @JoinColumn(name = "id_type", referencedColumnName = "id_type")
     private Types type;
@@ -38,7 +47,15 @@ public class Properties {
     private String thumbnail;
     public Properties() {}
 
-    public Properties(Types type, Structures structure, String rooms, String squareFootage, Boroughs borough, String floor, String bathrooms, String heating, Equipments equipment, int active, int visible, int category, int deposit, String price, String title, String description) {
+    public Properties(String name, String email, String phone, String contract, String street, String number,String moreInfo,Types type, Structures structure, String rooms, String squareFootage, Boroughs borough, String floor, String bathrooms, String heating, Equipments equipment, int active, int visible, int category, int deposit, String price, String title, String description) {
+        this.idProperty = nextId++;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.contract = contract;
+        this.street = street;
+        this.number = number;
+        this.moreInfo = moreInfo;
         this.type = type;
         this.structure = structure;
         this.rooms = rooms;
@@ -56,6 +73,70 @@ public class Properties {
         this.title = title;
         this.description = description;
         this.thumbnail=null;
+    }
+
+    public static void setNextId(long id){
+        nextId=id;
+    }
+    public static long getNextId() {
+        return nextId;
+    }
+
+    public void setMoreInfo(String moreInfo) {
+        this.moreInfo = moreInfo;
+    }
+
+    public String getMoreInfo() {
+        return moreInfo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getContract() {
+        return contract;
+    }
+
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setName(String firstName) {
+        this.name = firstName;
+    }
+
+    public void setEmail(String lastName) {
+        this.email = lastName;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setContract(String contract) {
+        this.contract = contract;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getThumbnail() {

@@ -5,12 +5,12 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "tags")
 public class Tags {
-
+    private static int nextId = 1;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idTag;
     private String tagName;
     public Tags(String tagName) {
+        this.idTag = nextId++;
         this.tagName = tagName;
     }
     public Tags() {

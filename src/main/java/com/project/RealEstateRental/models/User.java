@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
+
+    private static int nextId = 1;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(unique = true, nullable = false)
@@ -16,11 +18,12 @@ public class User {
     private String password;
 
     public User(String username, String password) {
+        this.id=nextId++;
         this.username = username;
         this.password = password;
     }
 
-    public User() {
+    protected User() {
     }
 
     public String getUsername() {

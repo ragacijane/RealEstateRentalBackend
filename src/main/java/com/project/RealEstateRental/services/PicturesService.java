@@ -1,7 +1,7 @@
 package com.project.RealEstateRental.services;
 
-import com.project.RealEstateRental.requests.PictureResponse;
-import com.project.RealEstateRental.requests.UpdatePicturesBody;
+import com.project.RealEstateRental.dtos.PictureResponse;
+import com.project.RealEstateRental.dtos.UpdatePicturesBody;
 import com.project.RealEstateRental.models.Pictures;
 import com.project.RealEstateRental.models.Properties;
 import com.project.RealEstateRental.repositories.PicturesRepository;
