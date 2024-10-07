@@ -48,12 +48,13 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("prMin") Integer prMin,
             @Param("prMax") Integer prMax);
 
-    @Query("SELECT p.title AS title, p.rooms AS rooms, p.squareFootage AS squareFootage, " +
-            "p.floor AS floor, p.bathrooms AS bathrooms, p.heating AS heating, " +
-            "p.deposit AS deposit, p.price AS price, p.description AS description, " +
-            "p.thumbnail AS thumbnail, p.active AS active, p.visible AS visible, " +
-            "p.category AS category, p.type AS type, p.structure AS structure, " +
-            "p.borough AS borough, p.equipment AS equipment " +
+    @Query("SELECT p.type.typeName AS type, p.structure.structureName AS structure, " +
+            "p.rooms AS rooms, p.squareFootage AS squareFootage, " +
+            "p.borough.boroughName AS borough, p.floor AS floor, p.bathrooms AS bathrooms, " +
+            "p.heating AS heating, p.equipment.equipmentName AS equipment, " +
+            "p.active AS active, p.visible AS visible, p.category AS category, " +
+            "p.deposit AS deposit, p.price AS price, p.title AS title, " +
+            "p.description AS description, p.thumbnail AS thumbnail " +
             "FROM Properties p WHERE p.idProperty = :id")
     PropertyProjection findProjectedById(@Param("id") Integer id);
 }

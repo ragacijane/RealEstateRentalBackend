@@ -11,18 +11,18 @@ public class Equipments {
     @Id
     @Column(name = "id_equipment")
     private int idEquipment;
-    private String equipmentType;
+    private String equipmentName;
 
     protected Equipments() {
     }
-    public Equipments(String equipmentType) {
+    public Equipments(String equipmentName) {
         this.idEquipment=nextId++;
-        this.equipmentType = equipmentType;
+        this.equipmentName = equipmentName;
     }
     public int getIdEquipment() {
         return idEquipment;
     }
-    public String getEquipmentType() {
-        return equipmentType;
+    public String getEquipmentName() {
+        return equipmentName;
     }
 }

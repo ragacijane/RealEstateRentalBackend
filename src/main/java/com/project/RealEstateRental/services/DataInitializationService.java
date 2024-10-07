@@ -75,8 +75,8 @@ public class DataInitializationService {
             Properties.setNextId(100);
         }
         bulkSaveService.saveAll(boroughsRepository, BOROUGHS, Boroughs::new, Boroughs::getBoroughName);
-        bulkSaveService.saveAll(equipmentsRepository, EQUIPMENTS, Equipments::new, Equipments::getEquipmentType);
-        bulkSaveService.saveAll(structuresRepository, STRUCTURES, Structures::new, Structures::getStructureType);
+        bulkSaveService.saveAll(equipmentsRepository, EQUIPMENTS, Equipments::new, Equipments::getEquipmentName);
+        bulkSaveService.saveAll(structuresRepository, STRUCTURES, Structures::new, Structures::getStructureName);
         bulkSaveService.saveAll(tagsRepository, TAGS, Tags::new, Tags::getTagName);
         bulkSaveService.saveAll(typesRepository, TYPES, Types::new, Types::getTypeName);
         if (!userRepository.existsByUsername(username)) { // Check if the user exists

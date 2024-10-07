@@ -11,20 +11,20 @@ public class Structures {
     @Id
     @Column(name = "id_structure")
     private int idStructure;
-    private String structureType;
+    private String structureName;
 
     protected Structures() {
     }
-    public Structures(String structureType) {
+    public Structures(String structureName) {
 
-        this.idStructure=nextId++; this.structureType = structureType;
+        this.idStructure=nextId++; this.structureName = structureName;
     }
 
     public int getIdStructure() {
         return idStructure;
     }
 
-    public String getStructureType() {
-        return structureType;
+    public String getStructureName() {
+        return structureName;
     }
 }
