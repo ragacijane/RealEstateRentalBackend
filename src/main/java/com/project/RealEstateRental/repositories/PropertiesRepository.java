@@ -48,7 +48,10 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("prMin") Integer prMin,
             @Param("prMax") Integer prMax);
 
-    @Query("SELECT p.type.typeName AS type, p.structure.structureName AS structure, " +
+    @Query("SELECT "+
+            "p.idProperty AS idProperty, "+
+            "p.type.typeName AS type, "+
+            "p.structure.structureName AS structure, " +
             "p.rooms AS rooms, p.squareFootage AS squareFootage, " +
             "p.borough.boroughName AS borough, p.floor AS floor, p.bathrooms AS bathrooms, " +
             "p.heating AS heating, p.equipment.equipmentName AS equipment, " +

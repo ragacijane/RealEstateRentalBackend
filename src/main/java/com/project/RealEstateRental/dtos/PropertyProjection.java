@@ -6,6 +6,7 @@ import com.project.RealEstateRental.models.Structures;
 import com.project.RealEstateRental.models.Types;
 
 public interface PropertyProjection {
+    Long getIdProperty();
     Types getType();
     Structures getStructure();
     Boroughs getBorough();
