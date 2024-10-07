@@ -5,17 +5,19 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "structures")
 public class Structures {
+
+    private static int nextId = 1;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_structure")
     private int idStructure;
     private String structureType;
 
-    public Structures() {
+    protected Structures() {
     }
-
     public Structures(String structureType) {
-        this.structureType = structureType;
+
+        this.idStructure=nextId++; this.structureType = structureType;
     }
 
     public int getIdStructure() {

@@ -1,5 +1,6 @@
 package com.project.RealEstateRental.repositories;
 
+import com.project.RealEstateRental.dtos.PropertyProjection;
 import com.project.RealEstateRental.models.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +11,9 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface PropertiesRepository extends JpaRepository<Properties,Integer> {
+
+    @Query("SELECT COALESCE(MAX(p.idProperty), 0) FROM Properties p")
+    long findMaxIdProperty();
 
     @Modifying
     @Transactional
@@ -33,7 +37,7 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             "(:cat IS NULL OR p.category = :cat) AND " +
             "(:prMin IS NULL OR p.price >= :prMin) AND " +
             "(:prMax IS NULL OR p.price <= :prMax)")
-    List<Properties> findByFilter(
+    List<PropertyProjection> findByFilter(
             @Param("idTy") Integer idTy,
             @Param("idSt") Integer idSt,
             @Param("sqMin") Integer sqMin,
@@ -43,6 +47,15 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("cat") Integer cat,
             @Param("prMin") Integer prMin,
             @Param("prMax") Integer prMax);
+
+    @Query("SELECT p.title AS title, p.rooms AS rooms, p.squareFootage AS squareFootage, " +
+            "p.floor AS floor, p.bathrooms AS bathrooms, p.heating AS heating, " +
+            "p.deposit AS deposit, p.price AS price, p.description AS description, " +
+            "p.thumbnail AS thumbnail, p.active AS active, p.visible AS visible, " +
+            "p.category AS category, p.type AS type, p.structure AS structure, " +
+            "p.borough AS borough, p.equipment AS equipment " +
+            "FROM Properties p WHERE p.idProperty = :id")
+    PropertyProjection findProjectedById(@Param("id") Integer id);
 }
 
 /*

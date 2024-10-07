@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "pictures")
 public class Pictures {
+
+    private static int nextId = 1;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPicture;
     private String pictureName;
     private String picturePath;
@@ -14,11 +16,10 @@ public class Pictures {
     @JoinColumn(name = "property_id", referencedColumnName = "id_property")
     private Properties property;
 
-    public Pictures() {
-
-    }
+    protected Pictures() {}
 
     public Pictures(String pictureName, String picturePath, Properties property) {
+        this.idPicture=nextId++;
         this.pictureName = pictureName;
         this.picturePath = picturePath;
         this.property = property;

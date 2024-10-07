@@ -62,9 +62,18 @@ public class DataInitializationService {
     private String username;
     @Value("${admin.password}")
     private String password;
+
+    @Autowired
+    private PropertiesRepository propertiesRepository;
     @PostConstruct
     @Transactional
     public void init() {
+        long maxId=propertiesRepository.findMaxIdProperty();
+        if(maxId > 0) {
+            Properties.setNextId(maxId + 1);
+        }else{
+            Properties.setNextId(100);
+        }
         bulkSaveService.saveAll(boroughsRepository, BOROUGHS, Boroughs::new, Boroughs::getBoroughName);
         bulkSaveService.saveAll(equipmentsRepository, EQUIPMENTS, Equipments::new, Equipments::getEquipmentType);
         bulkSaveService.saveAll(structuresRepository, STRUCTURES, Structures::new, Structures::getStructureType);

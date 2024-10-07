@@ -1,7 +1,9 @@
 package com.project.RealEstateRental.controllers;
+import com.project.RealEstateRental.dtos.PropertyProjection;
 import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.services.PropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +20,8 @@ public class PropertiesController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Properties>> getAllProperties(){
-        return ResponseEntity.ok(propertiesService.getAllProperties());
+    public ResponseEntity<List<PropertyProjection>> getAllProperties(){
+        return ResponseEntity.ok(propertiesService.getFilteredProperties(null,null,null,null,null,null,null,null,null));
     }
     @GetMapping("/tags/{id}")
     public ResponseEntity<List<Integer>> getListOfTags(
@@ -29,19 +31,19 @@ public class PropertiesController {
     }
 
     @GetMapping("/property")
-    public ResponseEntity<Properties> getSingleProperty(
+    public ResponseEntity<PropertyProjection> getSingleProperty(
             @RequestParam(required = true) Integer id
     ){
-        Properties property = propertiesService.getPropertyById(id);
+        PropertyProjection property = propertiesService.getProjectedById(id);
 
         // Check if the property is null or not visible
         if (property == null || property.getVisible() != 1) {
-            return ResponseEntity.ok(null);  // or return another appropriate response
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(property);
     }
     @GetMapping("/filters")
-    public ResponseEntity<List<Properties>> filterProperties(
+    public ResponseEntity<List<PropertyProjection>> filterProperties(
             @RequestParam(required = false) Integer idTy,
             @RequestParam(required = false) Integer idSt,
             @RequestParam(required = false) Integer sqMin,

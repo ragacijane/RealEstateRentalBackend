@@ -5,15 +5,18 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="equipments")
 public class Equipments {
+    private static int nextId = 1;
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_equipment")
     private int idEquipment;
     private String equipmentType;
 
-    public Equipments() {
+    protected Equipments() {
     }
     public Equipments(String equipmentType) {
+        this.idEquipment=nextId++;
         this.equipmentType = equipmentType;
     }
     public int getIdEquipment() {

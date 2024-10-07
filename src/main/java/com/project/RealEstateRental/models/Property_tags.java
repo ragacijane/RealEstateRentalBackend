@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "property_tags")
 public class Property_tags {
+
+    private static long nextId = 1;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
@@ -16,10 +18,11 @@ public class Property_tags {
     @JoinColumn(name = "tag_id", referencedColumnName = "idTag")
     private Tags tag;
 
-    public Property_tags() {
+    protected Property_tags() {
     }
 
     public Property_tags(Properties property, Tags tag) {
+        this.id=nextId++;
         this.property = property;
         this.tag = tag;
     }

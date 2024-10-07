@@ -1,4 +1,4 @@
-package com.project.RealEstateRental.requests;
+package com.project.RealEstateRental.dtos;
 
 public class ThumbnailBody {
     private String thumbnail;

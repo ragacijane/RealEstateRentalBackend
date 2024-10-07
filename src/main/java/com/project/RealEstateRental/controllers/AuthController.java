@@ -1,7 +1,7 @@
 package com.project.RealEstateRental.controllers;
 
-import com.project.RealEstateRental.requests.AuthenticationRequest;
-import com.project.RealEstateRental.requests.AuthenticationResponse;
+import com.project.RealEstateRental.dtos.AuthenticationRequest;
+import com.project.RealEstateRental.dtos.AuthenticationResponse;
 import com.project.RealEstateRental.services.JwtService;
 import com.project.RealEstateRental.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;

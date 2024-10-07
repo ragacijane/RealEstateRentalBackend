@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "types")
 public class Types {
+
+    private static int nextId = 1;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_type")
     private int idType;
 
@@ -21,9 +23,10 @@ public class Types {
     }
 
     public Types(String typeName) {
+        this.idType = nextId++;
         this.typeName = typeName;
     }
 
-    public Types() {
+    protected Types() {
     }
 }

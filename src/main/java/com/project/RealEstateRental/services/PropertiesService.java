@@ -1,31 +1,28 @@
 package com.project.RealEstateRental.services;
 
-import com.project.RealEstateRental.requests.UpdateItemBody;
+import com.project.RealEstateRental.dtos.PropertyProjection;
+import com.project.RealEstateRental.dtos.UpdateItemBody;
 import com.project.RealEstateRental.exceptions.ResourceNotFoundException;
 import com.project.RealEstateRental.models.*;
-import com.project.RealEstateRental.repositories.OwnersRepository;
 import com.project.RealEstateRental.repositories.PropertiesRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class PropertiesService {
     private final PropertiesRepository propertiesRepository;
-    private final OwnersRepository ownersRepository;
-    private final ConstantsService constantsService;
     private final PropertyTagsService propertyTagsService;
     @Autowired
-    public PropertiesService(PropertiesRepository propertiesRepository, OwnersRepository ownersRepository, ConstantsService constantsService, PropertyTagsService propertyTagsService) {
+    public PropertiesService(PropertiesRepository propertiesRepository,ConstantsService constantsService, PropertyTagsService propertyTagsService) {
         this.propertiesRepository = propertiesRepository;
-        this.ownersRepository = ownersRepository;
-        this.constantsService = constantsService;
         this.propertyTagsService = propertyTagsService;
     }
-
+    public PropertyProjection getProjectedById(int id){
+        return propertiesRepository.findProjectedById(id);
+    }
     public Properties getPropertyById(int id){
         return propertiesRepository.findById(id)
                 .orElseThrow(
@@ -35,64 +32,76 @@ public class PropertiesService {
     public List<Properties> getAllProperties(){
         return propertiesRepository.findAll();
     }
-    public List<Owners> getAllOwnersAndProperties(){
-        return ownersRepository.findAll();
-    }
     public List<Integer> getPropertyTags(int id){
         return propertyTagsService.getTagsByProperty(getPropertyById(id));
     }
 
-    public Owners createProperty(UpdateItemBody updateItemBody){
-        Properties providedProperty=updateItemBody.getItem().getProperty();
-        Properties property = propertiesRepository.save(new Properties(
-                providedProperty.getType(),
-                providedProperty.getStructure(),
-                providedProperty.getRooms(),
-                providedProperty.getSquareFootage(),
-                providedProperty.getBorough(),
-                providedProperty.getFloor(),
-                providedProperty.getBathrooms(),
-                providedProperty.getHeating(),
-                providedProperty.getEquipment(),
-                providedProperty.getActive(),
-                providedProperty.getVisible(),
-                providedProperty.getCategory(),
-                providedProperty.getDeposit(),
-                providedProperty.getPrice(),
-                providedProperty.getTitle(),
-                providedProperty.getDescription()
-        ));
-        Owners providedOwner = updateItemBody.getItem();
-        Owners owner = ownersRepository.save(new Owners(
-                providedOwner.getName(),
-                providedOwner.getEmail(),
-                providedOwner.getPhone(),
-                providedOwner.getContract(),
-                providedOwner.getStreet(),
-                providedOwner.getNumber(),
-                providedOwner.getMoreInfo(),
-                property
-        ));
+    public synchronized long createProperty(UpdateItemBody updateItemBody){
+        try{
+            Properties providedProperty = updateItemBody.getItem();
 
-        propertyTagsService.addTagsToProperty(updateItemBody.getTagIds(),property);
-        return owner;
+            long nextId = Properties.getNextId(); // Get current nextId
+            while (propertiesRepository.existsById((int) nextId)) {
+                nextId++; // Increment nextId until a non-existing ID is found
+            }
+            Properties.setNextId(nextId);
+
+            Properties property = propertiesRepository.save(new Properties(
+                    providedProperty.getName(),
+                    providedProperty.getEmail(),
+                    providedProperty.getPhone(),
+                    providedProperty.getContract(),
+                    providedProperty.getStreet(),
+                    providedProperty.getNumber(),
+                    providedProperty.getMoreInfo(),
+                    providedProperty.getType(),
+                    providedProperty.getStructure(),
+                    providedProperty.getRooms(),
+                    providedProperty.getSquareFootage(),
+                    providedProperty.getBorough(),
+                    providedProperty.getFloor(),
+                    providedProperty.getBathrooms(),
+                    providedProperty.getHeating(),
+                    providedProperty.getEquipment(),
+                    providedProperty.getActive(),
+                    providedProperty.getVisible(),
+                    providedProperty.getCategory(),
+                    providedProperty.getDeposit(),
+                    providedProperty.getPrice(),
+                    providedProperty.getTitle(),
+                    providedProperty.getDescription()
+            ));
+            propertyTagsService.addTagsToProperty(updateItemBody.getTagIds(), property);
+            return property.getIdProperty();
+        }catch (Exception e){
+            System.err.println("Error occurred while creating property: " + e.getMessage());
+            return 0;
+        }
     }
 
-    public void updateProperty(UpdateItemBody updateItemBody){
-        Properties property = updateItemBody.getItem().getProperty();
-        Owners owner = updateItemBody.getItem();
-
-        propertiesRepository.save(property);
-
-        ownersRepository.save(owner);
-
-        propertyTagsService.deleteTagFromProperty(property);
-        propertyTagsService.addTagsToProperty(updateItemBody.getTagIds(),property);
+    public synchronized boolean updateProperty(UpdateItemBody updateItemBody){
+        try{
+            Properties property = updateItemBody.getItem();
+            propertiesRepository.save(property);
+            propertyTagsService.deleteTagFromProperty(property);
+            propertyTagsService.addTagsToProperty(updateItemBody.getTagIds(), property);
+            return true;
+        }catch (Exception e){
+            System.err.println("Error occurred while creating property: " + e.getMessage());
+            return false;
+        }
     }
 
-    public void updateThumbnailPhoto(Properties property,String newThumbnail){
-        property.setThumbnail(newThumbnail);
-        propertiesRepository.save(property);
+    public boolean updateThumbnailPhoto(Properties property,String newThumbnail){
+        try{
+            property.setThumbnail(newThumbnail);
+            propertiesRepository.save(property);
+            return true;
+        }
+        catch(Exception e){
+            System.err.println("Error occurred while creating property: " + e.getMessage());
+            return false;
+        }
     }
 
     public void toggleActiveField(Integer propertyId) {
@@ -108,7 +117,7 @@ public class PropertiesService {
             throw new EntityNotFoundException("Property not found with id: " + propertyId);
         }
     }
-    public List<Properties> getFilteredProperties(
+    public List<PropertyProjection> getFilteredProperties(
             Integer typeId,
             Integer structureId,
             Integer sqMin,
