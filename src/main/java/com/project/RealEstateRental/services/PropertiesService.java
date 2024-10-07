@@ -7,6 +7,7 @@ import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.repositories.PropertiesRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class PropertiesService {
     private final PropertiesRepository propertiesRepository;
     private final PropertyTagsService propertyTagsService;
     @Autowired
-    public PropertiesService(PropertiesRepository propertiesRepository,ConstantsService constantsService, PropertyTagsService propertyTagsService) {
+    public PropertiesService(PropertiesRepository propertiesRepository, PropertyTagsService propertyTagsService) {
         this.propertiesRepository = propertiesRepository;
         this.propertyTagsService = propertyTagsService;
     }
@@ -30,7 +31,7 @@ public class PropertiesService {
     }
 
     public List<Properties> getAllProperties(){
-        return propertiesRepository.findAll();
+        return propertiesRepository.findAll(Sort.by(Sort.Direction.DESC, "idProperty"));
     }
     public List<Integer> getPropertyTags(int id){
         return propertyTagsService.getTagsByProperty(getPropertyById(id));
