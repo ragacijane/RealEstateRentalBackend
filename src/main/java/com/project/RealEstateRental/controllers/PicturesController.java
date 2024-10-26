@@ -1,6 +1,8 @@
 package com.project.RealEstateRental.controllers;
 
 
+import com.project.RealEstateRental.dtos.PicturesRequest;
+import com.project.RealEstateRental.models.Pictures;
 import com.project.RealEstateRental.models.Properties;
 import com.project.RealEstateRental.dtos.UpdatePicturesBody;
 import com.project.RealEstateRental.dtos.PictureResponse;
@@ -24,30 +26,22 @@ public class PicturesController {
         this.picturesService = picturesService;
         this.propertiesService = propertiesService;
     }
-
-    @GetMapping("/thumbnail/{thumbnail}")
-    public ResponseEntity<String> getThumbnail(
-            @PathVariable String thumbnail
-    ){
-        return ResponseEntity.ok(picturesService.getThumbnail(thumbnail));
-    }
     @PostMapping("/upload/{id}")
     public ResponseEntity<String> uploadImages(
             @PathVariable int id,
-            MultipartFile[] newImages,
-            String thumbnailPhoto,
-            String[] deletedPhotos,
-            String isThumbInNew
+             String[] deletedPhotos,
+             MultipartFile[] newImages,
+             String[] sequenceArray
     ){
         try {
             Properties property=propertiesService.getPropertyById(id);
-            UpdatePicturesBody updatePicturesBody =new UpdatePicturesBody(isThumbInNew,thumbnailPhoto,deletedPhotos,newImages);
-            String result = picturesService.updatePicturesToProperty(updatePicturesBody,property);
+            PicturesRequest picturesRequest =new PicturesRequest(deletedPhotos,newImages,sequenceArray);
+            String result = picturesService.handle(picturesRequest,property);
             propertiesService.updateThumbnailPhoto(property, result);
             return ResponseEntity.ok(result);
 
         }catch(Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Failed"+e.getMessage());
             return ResponseEntity.badRequest().body("Images uploading FAILED! "+e.getMessage());
         }
     }
@@ -57,7 +51,6 @@ public class PicturesController {
             @PathVariable int id
     ) {
         Properties property = propertiesService.getPropertyById(id);
-
         return picturesService.getImages(property);
     }
 }

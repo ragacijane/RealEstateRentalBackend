@@ -1,31 +1,27 @@
 package com.project.RealEstateRental.dtos;
 
 public class PictureResponse {
-    private String pictureUrl;
     private String pictureName;
+    private String picturePath;
+    private String thumbnailPath;
 
-    public PictureResponse() {
-    }
-
-    public PictureResponse(String pictureUrl, String pictureName) {
-        this.pictureUrl = pictureUrl;
+    // Constructor
+    public PictureResponse(String pictureName, String picturePath, String thumbnailPath) {
         this.pictureName = pictureName;
+        this.picturePath = picturePath;
+        this.thumbnailPath = thumbnailPath;
     }
 
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
-    }
-
+    // Getters
     public String getPictureName() {
         return pictureName;
     }
 
-    public void setPictureName(String pictureName) {
-        this.pictureName = pictureName;
+    public String getPicturePath() {
+        return picturePath;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
     }
 }
-

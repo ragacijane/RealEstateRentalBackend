@@ -65,14 +65,20 @@ public class DataInitializationService {
 
     @Autowired
     private PropertiesRepository propertiesRepository;
+    @Autowired
+    private PicturesRepository picturesRepository;
     @PostConstruct
     @Transactional
     public void init() {
         long maxId=propertiesRepository.findMaxIdProperty();
+        long maxPicId = picturesRepository.findMaxIdPicture();
         if(maxId > 0) {
             Properties.setNextId(maxId + 1);
         }else{
             Properties.setNextId(100);
+        }
+        if(maxPicId > 0){
+            Pictures.setNextId(maxPicId+1);
         }
         bulkSaveService.saveAll(boroughsRepository, BOROUGHS, Boroughs::new, Boroughs::getBoroughName);
         bulkSaveService.saveAll(equipmentsRepository, EQUIPMENTS, Equipments::new, Equipments::getEquipmentName);
