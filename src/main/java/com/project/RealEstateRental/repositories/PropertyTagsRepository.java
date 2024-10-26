@@ -12,4 +12,7 @@ public interface PropertyTagsRepository extends JpaRepository<Property_tags,Inte
     @Query("SELECT pt.tag.idTag FROM Property_tags pt WHERE pt.property = :property")
     List<Integer> findByProperty(Properties property);
     void deleteByProperty(Properties property);
+
+    @Query("SELECT COALESCE(MAX(p.id), 0) FROM Property_tags p")
+    long findMaxIdPropTag();
 }

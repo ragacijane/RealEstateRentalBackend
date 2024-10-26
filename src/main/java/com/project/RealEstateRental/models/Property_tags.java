@@ -26,7 +26,8 @@ public class Property_tags {
         this.property = property;
         this.tag = tag;
     }
-
+    public static void setNextId(long num){ nextId = num;}
+    public static long getNextId(){return nextId;}
     public long getId() {
         return id;
     }

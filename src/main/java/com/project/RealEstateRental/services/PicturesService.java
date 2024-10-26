@@ -42,6 +42,7 @@ public class PicturesService {
         return picturesRepository.findPictureDetailsByPropertyOrdered(property);
     }
 
+    @Transactional
     public String handle(PicturesRequest picturesRequest,Properties property)throws IOException{
         String newThumbnail="";
         List<Pictures> existingPictures = getPicturesByProperty(property);
