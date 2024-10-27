@@ -41,7 +41,7 @@ public class PicturesController {
             return ResponseEntity.ok(result);
 
         }catch(Exception e) {
-            System.out.println("Failed"+e.getMessage());
+            System.out.println("Failed: "+e.getMessage());
             return ResponseEntity.badRequest().body("Images uploading FAILED! "+e.getMessage());
         }
     }
