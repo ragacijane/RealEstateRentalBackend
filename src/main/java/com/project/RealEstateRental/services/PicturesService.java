@@ -2,6 +2,7 @@ package com.project.RealEstateRental.services;
 
 import com.project.RealEstateRental.dtos.PictureResponse;
 import com.project.RealEstateRental.dtos.PicturesRequest;
+import com.project.RealEstateRental.dtos.UpdatePicturesBody;
 import com.project.RealEstateRental.models.Pictures;
 import com.project.RealEstateRental.models.Properties;
 import com.project.RealEstateRental.repositories.PicturesRepository;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PicturesService {
@@ -70,17 +72,17 @@ public class PicturesService {
                 BufferedImage image = ImageIO.read(imageFile.getInputStream());
                 BufferedImage watermarkedImage = ImageUtils.addWatermark(image, watermarkImage);
 
-                File tempFile = new File("temp_watermarked_image.webp");
+                File tempFile = new File("temp_watermarked_image.png");
                 ImageUtils.saveImage(watermarkedImage, tempFile.getAbsolutePath());
 
                 // Upload watermarked image to S3
-                String picName = property.getIdProperty() + "_picture_" + Pictures.getNextId() + ".webp";
+                String picName = property.getIdProperty() + "_picture_" + Pictures.getNextId() + ".png";
                 String picturePath = property.getIdProperty() + "/" + picName;
                 s3Service.uploadFile(tempFile, picturePath);
                 tempFile.delete();
 
                 BufferedImage thumbnailImage = createThumbnail(watermarkedImage); // Thumbnail size: 150x150 pixels
-                File thumbnailFile = new File("temp_thumbnail_image.webp");
+                File thumbnailFile = new File("temp_thumbnail_image.png");
                 ImageUtils.saveImage(thumbnailImage, thumbnailFile.getAbsolutePath());
 
                 // Upload thumbnail image to S3

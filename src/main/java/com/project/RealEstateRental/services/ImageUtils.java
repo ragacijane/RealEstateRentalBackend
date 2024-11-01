@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.AlphaComposite;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,6 @@ public class ImageUtils {
     }
 
     public static void saveImage(BufferedImage image, String path) throws IOException {
-        ImageIO.write(image, "webp", new File(path));
+        ImageIO.write(image, "png", new File(path));
     }
 }
