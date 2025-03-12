@@ -7,6 +7,8 @@ import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.repositories.PropertiesRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -127,9 +129,20 @@ public class PropertiesService {
             List<Integer> idBors,
             Integer cat,
             Integer prMin,
-            Integer prMax){
+            Integer prMax,
+            Integer page,
+            Integer size,
+            String sort,
+            Boolean ascending){
 //        List<Integer> tagIdsList = propertyTagsService.parseTagIds(tagIds);
 //        Integer numTags = tagIdsList.size();
-        return propertiesRepository.findByFilter(typeId,structureId,sqMin,sqMax,equipmentId,idBors,cat,prMin,prMax);
+        Pageable pageable;
+        if(ascending){
+            pageable = PageRequest.of(page,size,Sort.by(sort).ascending());
+        }else{
+            pageable = PageRequest.of(page,size,Sort.by(sort).descending());
+        }
+
+        return propertiesRepository.findByFilter(typeId,structureId,sqMin,sqMax,equipmentId,idBors,cat,prMin,prMax,pageable);
     }
 }
