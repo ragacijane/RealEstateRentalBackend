@@ -52,7 +52,7 @@ public class PropertiesController {
             @RequestParam(required = true) Integer page,
             @RequestParam(required = true) Integer size,
             @RequestParam(required = true) String sort,
-            @RequestParam(required = true) String asc,
+            @RequestParam(required = true) boolean asc,
             @RequestParam(required = false) Integer idTy,
             @RequestParam(required = false) Integer idSt,
             @RequestParam(required = false) Integer sqMin,
@@ -75,6 +75,6 @@ public class PropertiesController {
                 page,
                 size,
                 sort,
-                asc=="asc"));
+                asc));
         }
 }

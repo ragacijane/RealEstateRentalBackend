@@ -50,6 +50,7 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("prMax") Integer prMax,
             Pageable pageable);
 
+
     @Query("SELECT p.idProperty AS idProperty, p.type AS type, p.structure AS structure, " +
             "p.borough AS borough, p.equipment AS equipment, " +
             "p.rooms AS rooms, p.squareFootage AS squareFootage, " +
