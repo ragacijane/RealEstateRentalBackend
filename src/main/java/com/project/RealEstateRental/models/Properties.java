@@ -25,7 +25,8 @@ public class Properties {
     @JoinColumn(name = "id_structure", referencedColumnName = "id_structure")
     private Structures structure;
     private String rooms;
-    private String squareFootage;
+    @Column( name="square_footage")
+    private Integer squareFootage;
     @ManyToOne
     @JoinColumn(name = "id_borough", referencedColumnName = "id_borough")
     private Boroughs borough;
@@ -40,14 +41,15 @@ public class Properties {
     @Column(name = "category")
     private int category;
     private int deposit;
-    private String price;
+    @Column(name = "price")
+    private Integer price;
     private String title;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
     private String thumbnail;
     public Properties() {}
 
-    public Properties(String name, String email, String phone, String contract, String street, String number,String moreInfo,Types type, Structures structure, String rooms, String squareFootage, Boroughs borough, String floor, String bathrooms, String heating, Equipments equipment, int active, int visible, int category, int deposit, String price, String title, String description) {
+    public Properties(String name, String email, String phone, String contract, String street, String number,String moreInfo,Types type, Structures structure, String rooms, Integer squareFootage, Boroughs borough, String floor, String bathrooms, String heating, Equipments equipment, int active, int visible, int category, int deposit, Integer price, String title, String description) {
         this.idProperty = nextId++;
         this.name = name;
         this.email = email;
@@ -175,7 +177,7 @@ public class Properties {
         return rooms;
     }
 
-    public String getSquareFootage() {
+    public Integer getSquareFootage() {
         return squareFootage;
     }
 
@@ -199,7 +201,7 @@ public class Properties {
         return deposit;
     }
 
-    public String getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -233,7 +235,7 @@ public class Properties {
         this.rooms = rooms;
     }
 
-    public void setSquareFootage(String squareFootage) {
+    public void setSquareFootage(Integer squareFootage) {
         this.squareFootage = squareFootage;
     }
 
@@ -261,7 +263,7 @@ public class Properties {
         this.deposit = deposit;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

@@ -2,6 +2,7 @@ package com.project.RealEstateRental.repositories;
 
 import com.project.RealEstateRental.dtos.PropertyProjection;
 import com.project.RealEstateRental.models.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -46,7 +47,9 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             @Param("idBors") List<Integer> idBors,
             @Param("cat") Integer cat,
             @Param("prMin") Integer prMin,
-            @Param("prMax") Integer prMax);
+            @Param("prMax") Integer prMax,
+            Pageable pageable);
+
 
     @Query("SELECT p.idProperty AS idProperty, p.type AS type, p.structure AS structure, " +
             "p.borough AS borough, p.equipment AS equipment, " +
@@ -59,10 +62,3 @@ public interface PropertiesRepository extends JpaRepository<Properties,Integer> 
             "FROM Properties p WHERE p.idProperty = :id")
     PropertyProjection findProjectedById(@Param("id") Integer id);
 }
-
-/*
-"(:tagIds IS NULL OR (SELECT COUNT(pt.id) FROM Property_tags pt WHERE pt.property = p AND pt.tag.idTag IN (:tagIds)) = :numTags)")
-
-            @Param("tagIds") List<Integer> tagIds,
-            @Param("numTags") Integer numTags);
- */

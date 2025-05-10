@@ -7,6 +7,8 @@ import com.project.RealEstateRental.models.*;
 import com.project.RealEstateRental.repositories.PropertiesRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +23,11 @@ public class PropertiesService {
         this.propertiesRepository = propertiesRepository;
         this.propertyTagsService = propertyTagsService;
     }
+
     public PropertyProjection getProjectedById(int id){
         return propertiesRepository.findProjectedById(id);
     }
+
     public Properties getPropertyById(int id){
         return propertiesRepository.findById(id)
                 .orElseThrow(
@@ -33,6 +37,7 @@ public class PropertiesService {
     public List<Properties> getAllProperties(){
         return propertiesRepository.findAll(Sort.by(Sort.Direction.DESC, "idProperty"));
     }
+
     public List<Integer> getPropertyTags(int id){
         return propertyTagsService.getTagsByProperty(getPropertyById(id));
     }
@@ -118,6 +123,7 @@ public class PropertiesService {
             throw new EntityNotFoundException("Property not found with id: " + propertyId);
         }
     }
+
     public List<PropertyProjection> getFilteredProperties(
             Integer typeId,
             Integer structureId,
@@ -127,9 +133,17 @@ public class PropertiesService {
             List<Integer> idBors,
             Integer cat,
             Integer prMin,
-            Integer prMax){
-//        List<Integer> tagIdsList = propertyTagsService.parseTagIds(tagIds);
-//        Integer numTags = tagIdsList.size();
-        return propertiesRepository.findByFilter(typeId,structureId,sqMin,sqMax,equipmentId,idBors,cat,prMin,prMax);
+            Integer prMax,
+            Integer page,
+            Integer size,
+            String sort,
+            Boolean ascending){
+        Pageable pageable;
+        if(ascending){
+            pageable = PageRequest.of(page,size,Sort.by(sort).ascending());
+        }else{
+            pageable = PageRequest.of(page,size,Sort.by(sort).descending());
+        }
+        return propertiesRepository.findByFilter(typeId,structureId,sqMin,sqMax,equipmentId,idBors,cat,prMin,prMax,pageable);
     }
 }

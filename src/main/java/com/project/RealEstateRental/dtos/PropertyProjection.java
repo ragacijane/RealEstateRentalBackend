@@ -13,7 +13,7 @@ public interface PropertyProjection {
     Equipments getEquipment();
 
     String getRooms();
-    String getSquareFootage();
+    Integer getSquareFootage();
     String getFloor();
     String getBathrooms();
     String getHeating();
@@ -21,7 +21,7 @@ public interface PropertyProjection {
     int getVisible();
     int getCategory();
     int getDeposit();
-    String getPrice();
+    Integer getPrice();
     String getTitle();
     String getDescription();
     String getThumbnail();

@@ -20,8 +20,13 @@ public class PropertiesController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<PropertyProjection>> getAllProperties(){
-        return ResponseEntity.ok(propertiesService.getFilteredProperties(null,null,null,null,null,null,null,null,null));
+    public ResponseEntity<List<PropertyProjection>> getAllProperties(
+            @RequestParam(required = true) Integer page,
+            @RequestParam(required = true) Integer size,
+            @RequestParam(required = true) String sort,
+            @RequestParam(required = true) String asc
+    ){
+        return ResponseEntity.ok(propertiesService.getFilteredProperties(null,null,null,null,null,null,null,null,null, page,size,sort,asc=="asc"));
     }
     @GetMapping("/tags/{id}")
     public ResponseEntity<List<Integer>> getListOfTags(
@@ -44,6 +49,10 @@ public class PropertiesController {
     }
     @GetMapping("/filters")
     public ResponseEntity<List<PropertyProjection>> filterProperties(
+            @RequestParam(required = true) Integer page,
+            @RequestParam(required = true) Integer size,
+            @RequestParam(required = true) String sort,
+            @RequestParam(required = true) boolean asc,
             @RequestParam(required = false) Integer idTy,
             @RequestParam(required = false) Integer idSt,
             @RequestParam(required = false) Integer sqMin,
@@ -62,6 +71,10 @@ public class PropertiesController {
                  idBors,
                  cat,
                  prMin,
-                 prMax));
+                 prMax,
+                page,
+                size,
+                sort,
+                asc));
         }
 }
