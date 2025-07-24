@@ -17,6 +17,7 @@ public class Properties {
     private String contract;
     private String street;
     private String number;
+    @Column(name = "moreInfo", columnDefinition = "TEXT")
     private String moreInfo;
     @ManyToOne
     @JoinColumn(name = "id_type", referencedColumnName = "id_type")
