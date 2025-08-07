@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "properties")
 public class Properties {
-
+    // Test comment
     private static long nextId = 100;
     @Id
     @Column(name = "id_property")
