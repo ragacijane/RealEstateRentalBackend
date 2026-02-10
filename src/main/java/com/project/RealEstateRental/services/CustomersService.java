@@ -1,7 +1,9 @@
 package com.project.RealEstateRental.services;
 import com.project.RealEstateRental.dtos.CustomerDTO;
+import com.project.RealEstateRental.dtos.GetCustomerResponse;
 import com.project.RealEstateRental.models.Customers;
 import com.project.RealEstateRental.repositories.CustomersRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,14 +45,14 @@ public class CustomersService {
                 customer.getCons(),
                 customer.getContract(),
                 customer.getDescription(),
-                customer.isActive()
+                customer.getIsActive()
         );
     }
 
 
 
     public long createCustomer(CustomerDTO dto) {
-        if (dto.getIdCustomer() != null) {
+        if (dto.getIdCustomer() != null && dto.getIdCustomer() != 0) {
             throw new IllegalArgumentException("Customer id must be null when creating");
         }
 
@@ -71,7 +73,7 @@ public class CustomersService {
         return customersRepository.save(existing).getIdCustomer();
     }
 
-    public List<Customers> getFilteredCustomers(
+    public GetCustomerResponse getFilteredCustomers(
             Integer page,
             Integer size,
             String sort,
@@ -87,7 +89,7 @@ public class CustomersService {
                 ? PageRequest.of(page, size, Sort.by("id_customer").ascending())
                 : PageRequest.of(page, size, Sort.by("id_customer").descending());
 
-        return customersRepository.findByFilter(
+        List<Customers> customers = customersRepository.findByFilter(
                 idCustomer,
                 firstName,
                 secondName,
@@ -96,5 +98,23 @@ public class CustomersService {
                 clientType,
                 pageable
         );
+        System.out.println(customers);
+        long totalCount = customersRepository.countByFilter(
+                idCustomer,
+                firstName,
+                secondName,
+                email,
+                phoneNumber,
+                clientType
+        );
+
+        return new GetCustomerResponse(customers,totalCount);
+    }
+
+    public void toggleActiveField(Integer idCustomer) {
+        int rowsAffected = customersRepository.toggleActive(idCustomer);
+        if (rowsAffected == 0) {
+            throw new EntityNotFoundException("Customer not found with id: " + idCustomer);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.project.RealEstateRental.controllers;
 
 import com.project.RealEstateRental.dtos.CustomerDTO;
+import com.project.RealEstateRental.dtos.GetCustomerResponse;
 import com.project.RealEstateRental.dtos.PropertyProjection;
 import com.project.RealEstateRental.dtos.UpdateItemBody;
 import com.project.RealEstateRental.models.Customers;
@@ -85,7 +86,7 @@ public class AdminController {
     }
 
     @GetMapping("/customers")
-    public ResponseEntity<List<Customers>> filterProperties(
+    public ResponseEntity<GetCustomerResponse> filterProperties(
             @RequestParam(required = true) Integer page,
             @RequestParam(required = true) Integer size,
             @RequestParam(required = true) String sort,
@@ -98,5 +99,15 @@ public class AdminController {
             @RequestParam(required = false) String clientType) {
         return ResponseEntity.ok(customersService.getFilteredCustomers(
                 page, size, sort, asc, idCustomer, firstName, secondName, email, phoneNumber, clientType));
+    }
+
+    @PostMapping("/customers/{id}/toggle-active")
+    public ResponseEntity<String> toggleCustomerActive(@PathVariable Integer id) {
+        try {
+            customersService.toggleActiveField(id);
+            return ResponseEntity.ok("Customer active field toggled successfully.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(404).body("Customer not found with id: " + id);
+        }
     }
 }

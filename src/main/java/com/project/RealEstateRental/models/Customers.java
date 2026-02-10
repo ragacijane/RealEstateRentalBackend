@@ -44,10 +44,11 @@ public class Customers {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(name="is_active")
     private boolean isActive;
 
     public Customers(CustomerDTO dto) {
-        if (dto.getIdCustomer() == null) {
+        if (dto.getIdCustomer() == null || dto.getIdCustomer() == 0) {
             this.idCustomer = nextId++;
         } else {
             this.idCustomer = dto.getIdCustomer();
@@ -147,7 +148,7 @@ public class Customers {
         return description;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
@@ -187,6 +188,6 @@ public class Customers {
     public void setDescription(String description) {
     }
 
-    public void setActive(boolean active) {
+    public void setIsActive(boolean active) {
     }
 }
